@@ -32,7 +32,8 @@ def main() -> int:
         from google.oauth2 import service_account
         from googleapiclient.discovery import build
     except ImportError as exc:
-        raise SystemExit("Install optional dependencies first: python -m pip install -r requirements-integrations.txt") from exc
+        raise SystemExit(
+            "Install optional dependencies first: pip install -r requirements-integrations.txt") from exc
 
     records = read_source_log(Path(args.input))
     errors = validate_source_log_records(records)

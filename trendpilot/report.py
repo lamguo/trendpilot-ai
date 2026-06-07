@@ -48,7 +48,8 @@ def build_daily_report(
     lines.extend(
         [
             "",
-            "> Generated from local records for research workflow demonstration only. This does not guarantee demand, sales, profit, or product success.",
+            "> Generated from local records for research workflow demonstration only.",
+            "> This does not guarantee demand, sales, profit, or product success.",
             "",
             "## Summary",
             "",

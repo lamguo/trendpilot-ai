@@ -154,7 +154,9 @@ def run_score(args: argparse.Namespace) -> int:
             target_region=_required(_choose(args.target_region, payload, "target_region"), "target_region"),
             target_audience=_required(_choose(args.target_audience, payload, "target_audience"), "target_audience"),
             source_urls=_choose(args.source_url, payload, "source_urls", []),
-            evidence_summary=_choose(args.evidence_summary, payload, "evidence_summary", "Needs source review before use."),
+            evidence_summary=_choose(
+                args.evidence_summary, payload, "evidence_summary",
+                "Needs source review before use."),
             main_strengths=_choose(args.main_strength, payload, "main_strengths", []),
             main_risks=_choose(args.main_risk, payload, "main_risks", []),
             scores=scores,

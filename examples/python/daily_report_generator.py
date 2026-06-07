@@ -11,8 +11,10 @@ from trendpilot.report import build_daily_report, filter_records
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Generate a Markdown trend report from a TrendPilot AI source log CSV.")
-    parser.add_argument("--input", required=True, help="Path to source-log CSV, for example examples/sample-source-log.csv")
+    parser = argparse.ArgumentParser(
+        description="Generate a Markdown trend report from a TrendPilot AI source log CSV.")
+    parser.add_argument("--input", required=True,
+                        help="Path to source-log CSV, e.g. examples/sample-source-log.csv")
     parser.add_argument("--output", required=True, help="Path to output Markdown report")
     parser.add_argument("--region", default=None, help="Optional exact region filter, for example 'United States'")
     parser.add_argument("--limit", type=int, default=10, help="Maximum number of records to include")

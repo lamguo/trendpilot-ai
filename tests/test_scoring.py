@@ -1,6 +1,6 @@
 import unittest
 
-from trendpilot.scoring import calculate_opportunity_score, interpret_score, build_product_score_record
+from trendpilot.scoring import build_product_score_record, calculate_opportunity_score, interpret_score
 
 
 class ScoringTests(unittest.TestCase):

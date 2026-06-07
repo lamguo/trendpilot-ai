@@ -30,7 +30,10 @@ class RecordTests(unittest.TestCase):
 
     def test_invalid_enums_are_reported(self):
         record = {field: "demo" for field in SOURCE_LOG_FIELDS}
-        record.update({"risk_level": "Maybe", "confidence": "Medium", "review_status": "Needs Review", "opportunity_score": "7"})
+        record.update({
+            "risk_level": "Maybe", "confidence": "Medium",
+            "review_status": "Needs Review", "opportunity_score": "7"
+        })
         errors = validate_source_log_records([record])
         self.assertTrue(any("risk_level" in error for error in errors))
 

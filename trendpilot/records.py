@@ -37,7 +37,10 @@ def validate_source_log_records(records: list[dict[str, str]]) -> list[str]:
     dependency-free.
     """
     errors: list[str] = []
-    required_non_empty = ["record_id", "source_url", "evidence_summary", "risk_note", "risk_level", "confidence", "review_status"]
+    required_non_empty = [
+        "record_id", "source_url", "evidence_summary",
+        "risk_note", "risk_level", "confidence", "review_status",
+    ]
 
     for index, record in enumerate(records, start=2):
         for field in required_non_empty:
