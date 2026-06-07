@@ -227,6 +227,7 @@ marketplace_research_angle
 source_evidence_summary
 confidence
 risk_note
+risk_level
 opportunity_score
 score_interpretation
 suggested_next_action
@@ -516,8 +517,9 @@ Example output structure:
   "consumer_pain_point": "Jewelry can get tangled, scratched, or lost during travel.",
   "content_angle": "Before-and-after packing routine showing messy jewelry versus organized travel case.",
   "confidence": "Medium",
-  "risk_note": "Avoid copying creator content or competitor images. Verify material claims and zipper quality.",
-  "opportunity_score": 15,
+"risk_note": "Avoid copying creator content or competitor images. Verify material claims and zipper quality.",
+"risk_level": "Low",
+"opportunity_score": 15,
   "review_status": "Draft",
   "next_action": "Check marketplace pricing, public reviews, and supplier options."
 }
@@ -707,6 +709,7 @@ target_audience
 pain_point
 content_angle
 risk_note
+risk_level
 confidence
 opportunity_score
 next_action
@@ -770,6 +773,7 @@ Before publishing or using Dify-generated output, confirm:
 - [ ] No unsupported statistics are included
 - [ ] Confidence level is included
 - [ ] Risk note is included
+- [ ] Risk level is included
 - [ ] Product success is not guaranteed
 - [ ] Disclaimer is included
 - [ ] Human reviewer has approved the output
