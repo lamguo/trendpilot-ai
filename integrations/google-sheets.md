@@ -17,7 +17,9 @@ In a TrendPilot AI workflow, Google Sheets may help with:
 - Saving public trend signals
 - Tracking source URLs
 - Storing product opportunity scores
-- Adding risk notes
+- Storing risk notes
+- Storing risk levels
+- Managing confidence levels
 - Managing human review status
 - Creating watchlists
 - Reviewing AI-generated product ideas
@@ -58,6 +60,7 @@ Google Sheets is useful for:
 - MVP trend intelligence workflows
 - Source logging
 - Product opportunity tracking
+- Risk level review
 - Manual review
 - Simple scoring dashboards
 - Watchlists
@@ -96,6 +99,62 @@ Not for:
 
 ```text
 Private data storage, contact scraping, or spam workflows
+```
+
+---
+
+## Standard TrendPilot AI Record Fields
+
+TrendPilot AI should use one consistent field structure across:
+
+```text
+templates/source-log-template.csv
+workflows/n8n-daily-trend-intelligence.pseudo.json
+workflows/n8n-google-sheets-output.pseudo.json
+workflows/n8n-telegram-digest.pseudo.json
+integrations/google-sheets.md
+```
+
+Standard fields:
+
+```text
+record_id
+source_type
+source_name
+source_url
+collection_date
+publication_date
+region
+category
+keyword
+product_name
+trend_signal
+evidence_summary
+target_audience
+pain_point
+content_angle
+price_signal
+competition_signal
+risk_note
+risk_level
+confidence
+opportunity_score
+next_action
+review_status
+reviewer_note
+```
+
+Important:
+
+```text
+risk_note and risk_level are separate fields.
+```
+
+Meaning:
+
+```text
+risk_note = human-readable explanation of the risk
+risk_level = standardized risk category
 ```
 
 ---
@@ -141,6 +200,7 @@ content_angle
 price_signal
 competition_signal
 risk_note
+risk_level
 confidence
 opportunity_score
 next_action
@@ -174,6 +234,11 @@ draft_records
 needs_review_records
 watchlist_records
 rejected_records
+low_risk_records
+medium_risk_records
+high_risk_records
+avoid_risk_records
+unknown_risk_records
 top_product_idea
 top_opportunity_score
 highest_risk_item
@@ -184,7 +249,7 @@ reviewer_note
 Example use:
 
 ```text
-Every day, summarize how many records were collected, which product ideas scored highest, and which records need review.
+Every day, summarize how many records were collected, which product ideas scored highest, which records need review, and which records carry higher risk.
 ```
 
 ---
@@ -207,6 +272,7 @@ product_idea
 reason_to_watch
 confidence
 risk_level
+risk_note
 next_check_date
 source_url
 status
@@ -241,6 +307,8 @@ source_type
 rejection_date
 rejection_reason
 risk_type
+risk_level
+risk_note
 reviewer_note
 ```
 
@@ -257,6 +325,7 @@ Platform policy risk
 Duplicate record
 Low relevance
 Unsafe automation
+Avoid risk level
 ```
 
 ---
@@ -274,10 +343,13 @@ allowed_regions
 allowed_categories
 allowed_source_types
 blocked_source_types
+allowed_risk_levels_for_digest
+blocked_risk_levels_for_digest
 minimum_confidence_for_digest
 minimum_score_for_alert
 review_required
 default_review_status
+default_risk_level
 digest_channel
 report_frequency
 ```
@@ -338,7 +410,7 @@ High confidence does not mean guaranteed sales.
 
 ---
 
-## Recommended Risk Values
+## Recommended Risk Level Values
 
 Use simple risk labels:
 
@@ -359,6 +431,20 @@ Meaning:
 | High | Requires deeper compliance, safety, IP, or platform review |
 | Avoid | Should not be used in current form |
 | Unknown | Not enough information to judge |
+
+Important:
+
+```text
+risk_level should be a standardized label.
+risk_note should explain why that label was selected.
+```
+
+Example:
+
+```text
+risk_level: Medium
+risk_note: Category may be crowded and price-driven. Avoid copying competitor photos or listing text.
+```
 
 ---
 
@@ -399,8 +485,6 @@ region
 category
 ```
 
-This helps keep records consistent.
-
 Example dropdown values:
 
 ```text
@@ -418,13 +502,18 @@ risk_level:
 Low, Medium, High, Avoid, Unknown
 ```
 
+```text
+source_type:
+Search, Marketplace, Social, Community, Review, News / Report, Manual
+```
+
 ---
 
 ## Suggested Conditional Formatting
 
 Conditional formatting can make review easier.
 
-Examples:
+Review status:
 
 ```text
 Approved = green
@@ -485,6 +574,13 @@ Related template:
 templates/product-opportunity-scorecard.md
 ```
 
+Important:
+
+```text
+Opportunity score is a research framework only.
+It does not guarantee sales, profit, or product success.
+```
+
 ---
 
 ## Suggested Google Sheets Workflow
@@ -497,11 +593,13 @@ A basic workflow can look like this:
 3. Score product opportunity.
 4. Run risk check.
 5. Save record to source_log.
-6. Mark review_status as Draft.
-7. Human reviews the record.
-8. Human updates review_status.
-9. Approved records are used in reports.
-10. Watchlist records are checked later.
+6. Store risk_note and risk_level separately.
+7. Mark review_status as Draft.
+8. Human reviews the record.
+9. Human updates review_status.
+10. Approved records are used in reports.
+11. Watchlist records are checked later.
+12. Rejected or Avoid records are excluded from reports.
 ```
 
 ---
@@ -554,10 +652,23 @@ category
 trend_signal
 evidence_summary
 risk_note
+risk_level
 confidence
 ```
 
 If `source_url` is missing, mark the record as:
+
+```text
+Needs Review
+```
+
+If `risk_level` is missing, set it to:
+
+```text
+Unknown
+```
+
+and mark the record as:
 
 ```text
 Needs Review
@@ -568,6 +679,20 @@ If private personal data is detected, mark the record as:
 ```text
 Rejected
 ```
+
+If `risk_level` is:
+
+```text
+Avoid
+```
+
+mark the record as:
+
+```text
+Rejected
+```
+
+unless a human reviewer corrects the record.
 
 ---
 
@@ -628,6 +753,7 @@ Evidence summary
 Trend signal
 Product idea
 Risk note
+Risk level
 Confidence level
 Opportunity score
 Next action
@@ -651,6 +777,29 @@ reviewer_note
 
 ---
 
+## Suggested Review Rules
+
+Recommended review logic:
+
+| Condition | Suggested Status |
+|---|---|
+| confidence = Low | Watchlist |
+| risk_level = Unknown | Needs Review |
+| risk_level = Medium | Needs Review |
+| risk_level = High | Needs Review |
+| risk_level = Avoid | Rejected |
+| source_url missing | Needs Review |
+| private data detected | Rejected |
+| human reviewer approves | Approved |
+
+Important:
+
+```text
+Do not automatically approve AI-generated records.
+```
+
+---
+
 ## Suggested Daily Summary Metrics
 
 A daily summary can include:
@@ -662,6 +811,11 @@ draft_records
 needs_review_records
 watchlist_records
 rejected_records
+low_risk_records
+medium_risk_records
+high_risk_records
+avoid_risk_records
+unknown_risk_records
 top_opportunity_score
 top_product_idea
 most_common_category
@@ -679,6 +833,8 @@ A simple Google Sheets dashboard may include:
 - Total records by date
 - Records by category
 - Records by region
+- Records by risk level
+- Records by review status
 - Top opportunity scores
 - Watchlist count
 - Needs Review count
@@ -762,6 +918,35 @@ templates/source-log-template.csv
 
 Users can import this CSV into Google Sheets to create a starting table.
 
+The CSV includes these standard fields:
+
+```text
+record_id
+source_type
+source_name
+source_url
+collection_date
+publication_date
+region
+category
+keyword
+product_name
+trend_signal
+evidence_summary
+target_audience
+pain_point
+content_angle
+price_signal
+competition_signal
+risk_note
+risk_level
+confidence
+opportunity_score
+next_action
+review_status
+reviewer_note
+```
+
 The CSV includes example records for:
 
 ```text
@@ -787,12 +972,23 @@ templates/ecommerce-market-report.md
 templates/telegram-digest-template.md
 ```
 
-Suggested filter:
+Suggested filter for public or paid reports:
 
 ```text
 review_status = Approved
 confidence = Medium or High
-risk_level is not Avoid
+risk_level = Low or Medium
+```
+
+Avoid using:
+
+```text
+review_status = Draft
+review_status = Needs Review
+review_status = Rejected
+risk_level = High
+risk_level = Avoid
+risk_level = Unknown
 ```
 
 Draft and Needs Review records should be used only for internal review.
@@ -815,7 +1011,11 @@ Suggested selection rules:
 ```text
 Top 3 to 5 records by opportunity_score
 Only Approved records
+Only Medium or High confidence records
+Only Low or Medium risk level records
+Exclude High risk level
 Exclude Avoid risk level
+Exclude Unknown risk level
 Include disclaimer
 Include source links or source references
 ```
@@ -833,6 +1033,7 @@ Avoid:
 - Publishing AI-generated records without review
 - Using records without source URLs
 - Removing risk notes
+- Removing risk levels
 - Removing disclaimers
 - Overstating opportunity scores
 - Using Google Sheets as a spam outreach list
@@ -896,6 +1097,7 @@ Structured public records
 + Source URLs
 + Confidence levels
 + Risk notes
++ Risk levels
 + Review status
 + Human review
 ```
