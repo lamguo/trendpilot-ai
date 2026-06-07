@@ -17,7 +17,7 @@ It does not guarantee product demand, sales, profit, or business success.
 **Target Region:**  
 **Main Category / Niche:**  
 **Prepared By:**  
-**Review Status:** Draft / Reviewed / Approved  
+**Review Status:** Draft / Needs Review / Approved / Rejected / Watchlist  
 
 ---
 
@@ -121,7 +121,7 @@ Summarize compliance, shipping, platform, IP, quality, or source reliability ris
 **Suggested Keywords:**  
 **Suggested Content Angle:**  
 **Confidence Level:** Low / Medium / High  
-**Risk Level:** Low / Medium / High  
+**Risk Level:** Low / Medium / High / Avoid / Unknown  
 **Suggested Next Action:**  
 
 ### Opportunity Score
@@ -160,7 +160,7 @@ Add reviewer notes here.
 **Suggested Keywords:**  
 **Suggested Content Angle:**  
 **Confidence Level:** Low / Medium / High  
-**Risk Level:** Low / Medium / High  
+**Risk Level:** Low / Medium / High / Avoid / Unknown  
 **Suggested Next Action:**  
 
 ### Opportunity Score
@@ -199,7 +199,7 @@ Add reviewer notes here.
 **Suggested Keywords:**  
 **Suggested Content Angle:**  
 **Confidence Level:** Low / Medium / High  
-**Risk Level:** Low / Medium / High  
+**Risk Level:** Low / Medium / High / Avoid / Unknown  
 **Suggested Next Action:**  
 
 ### Opportunity Score
@@ -413,10 +413,10 @@ Use public review patterns only. Do not copy full reviews.
 
 | Product Idea | Risk Type | Risk Level | Recommendation |
 |---|---|---|---|
-|  | Compliance | Low / Medium / High | Proceed / Review / Avoid |
-|  | IP / Trademark | Low / Medium / High | Proceed / Review / Avoid |
-|  | Shipping | Low / Medium / High | Proceed / Review / Avoid |
-|  | Platform Policy | Low / Medium / High | Proceed / Review / Avoid |
+|  | Compliance | Low / Medium / High / Avoid / Unknown | Proceed / Review / Avoid |
+|  | IP / Trademark | Low / Medium / High / Avoid / Unknown | Proceed / Review / Avoid |
+|  | Shipping | Low / Medium / High / Avoid / Unknown | Proceed / Review / Avoid |
+|  | Platform Policy | Low / Medium / High / Avoid / Unknown | Proceed / Review / Avoid |
 
 ### Common Risk Categories
 
