@@ -1,0 +1,418 @@
+{
+  "name": "TrendPilot AI - Telegram Digest Pseudo Workflow",
+  "type": "pseudo-workflow",
+  "version": "0.1.0",
+  "status": "planning-template",
+  "description": "A license-safe pseudo workflow for generating and sending short AI-assisted trend intelligence digests to Telegram or other opt-in delivery channels.",
+  "important_notice": [
+    "This is not a real n8n export file.",
+    "This file is a pseudo workflow design for planning and educational purposes.",
+    "It should not be imported directly into n8n.",
+    "TrendPilot AI does not copy or redistribute third-party workflow exports.",
+    "Users must adapt this workflow to their own tools, APIs, Telegram bot settings, permissions, and compliance requirements."
+  ],
+  "safe_use_principles": [
+    "Send digests only to opt-in channels, private teams, or approved subscribers.",
+    "Do not send unsolicited mass messages.",
+    "Do not use scraped email lists, phone lists, or private contact databases.",
+    "Do not use Telegram delivery for spam, fake urgency, or misleading income claims.",
+    "Use only reviewed or approved trend records for external delivery.",
+    "Include disclaimers in every digest.",
+    "Keep source links available for important claims.",
+    "Use human review before sending paid or public reports."
+  ],
+  "recommended_stack": {
+    "workflow_layer": "n8n, Make, Zapier, cron, or custom automation",
+    "input_storage": "Google Sheets, Notion, Airtable, CSV, or database",
+    "message_template": "templates/telegram-digest-template.md",
+    "delivery_channel": "Telegram Bot API, Slack, Discord, email, or internal chat",
+    "human_review": "Manual approval before public or paid delivery"
+  },
+  "workflow_summary": {
+    "goal": "Load reviewed trend records, select top opportunities, format a short digest, add risk notes and disclaimer, then send it to an approved Telegram channel or internal team.",
+    "input": "Approved trend records from Google Sheets, Notion, Airtable, CSV, or database.",
+    "output": "Telegram digest message or internal alert.",
+    "recommended_frequency": "Daily or weekly",
+    "human_review_required": true
+  },
+  "pseudo_nodes": [
+    {
+      "id": "node_001",
+      "name": "Schedule or Manual Trigger",
+      "type": "trigger",
+      "purpose": "Start the digest workflow on a fixed schedule or manual approval.",
+      "example_configuration": {
+        "frequency": "daily_or_weekly",
+        "time": "18:00",
+        "timezone": "user_defined",
+        "manual_trigger_allowed": true
+      },
+      "output": {
+        "run_date": "{{current_date}}",
+        "workflow_run_id": "{{generated_id}}"
+      },
+      "risk_notes": [
+        "Do not send too frequently.",
+        "Avoid spam-like delivery patterns.",
+        "For public or paid channels, use human approval before sending."
+      ]
+    },
+    {
+      "id": "node_002",
+      "name": "Load Trend Records",
+      "type": "data_input",
+      "purpose": "Load trend records from the selected research log or database.",
+      "possible_sources": [
+        "Google Sheets source_log tab",
+        "Notion database",
+        "Airtable base",
+        "CSV file",
+        "Database",
+        "Manual approved record list"
+      ],
+      "required_fields": [
+        "record_id",
+        "source_type",
+        "source_name",
+        "source_url",
+        "collection_date",
+        "region",
+        "category",
+        "product_name",
+        "trend_signal",
+        "evidence_summary",
+        "target_audience",
+        "pain_point",
+        "content_angle",
+        "risk_note",
+        "confidence",
+        "opportunity_score",
+        "next_action",
+        "review_status"
+      ],
+      "risk_notes": [
+        "Do not load records that contain private personal data.",
+        "Do not load rejected records for external delivery."
+      ]
+    },
+    {
+      "id": "node_003",
+      "name": "Filter Approved Records",
+      "type": "validation",
+      "purpose": "Filter records so only safe and reviewable items are included in the digest.",
+      "filter_rules": {
+        "allowed_review_status": [
+          "Approved",
+          "Watchlist"
+        ],
+        "minimum_confidence": [
+          "Medium",
+          "High"
+        ],
+        "excluded_review_status": [
+          "Rejected",
+          "Needs Review"
+        ],
+        "excluded_risk_level": [
+          "Avoid"
+        ]
+      },
+      "routing": {
+        "eligible_records": "node_004",
+        "excluded_records": "node_003_excluded_log"
+      },
+      "risk_notes": [
+        "Draft records should normally not be sent to public or paid channels.",
+        "Needs Review records should be checked by a human first.",
+        "Rejected records should never be included in a digest."
+      ]
+    },
+    {
+      "id": "node_004",
+      "name": "Sort and Select Top Opportunities",
+      "type": "data_processing",
+      "purpose": "Rank eligible records and select the most useful opportunities for the digest.",
+      "sorting_rules": [
+        "Sort by opportunity_score descending.",
+        "Prefer Medium or High confidence records.",
+        "Exclude high-risk records unless placed in the High-Risk Ideas section.",
+        "Limit top opportunities to 3 to 5 items.",
+        "Keep watchlist items separate from top opportunities."
+      ],
+      "output": {
+        "top_opportunities": "{{top_3_to_5_records}}",
+        "watchlist_items": "{{watchlist_records}}",
+        "high_risk_items": "{{high_risk_records}}"
+      },
+      "risk_notes": [
+        "High score does not guarantee sales.",
+        "Do not overstate weak trend signals.",
+        "Do not hide risk notes."
+      ]
+    },
+    {
+      "id": "node_005",
+      "name": "Create Digest Summary",
+      "type": "message_generation",
+      "purpose": "Create a short digest summary using the Telegram digest template.",
+      "recommended_template": "templates/telegram-digest-template.md",
+      "message_sections": [
+        "Header",
+        "Date",
+        "Region",
+        "Category",
+        "Top Product Opportunities",
+        "Opportunity Score",
+        "Confidence",
+        "Risk Level",
+        "Why It Matters",
+        "Suggested Next Action",
+        "Watchlist",
+        "High-Risk Ideas",
+        "Disclaimer"
+      ],
+      "format_rules": [
+        "Keep message concise.",
+        "Use clear section separators.",
+        "Avoid long paragraphs.",
+        "Include risk notes.",
+        "Include disclaimer.",
+        "Avoid hype language.",
+        "Avoid guaranteed income language."
+      ],
+      "risk_notes": [
+        "Do not make unsupported claims.",
+        "Do not say a product will definitely sell.",
+        "Do not imply investment or financial advice."
+      ]
+    },
+    {
+      "id": "node_006",
+      "name": "Add Source References",
+      "type": "data_mapping",
+      "purpose": "Attach source references or source-count notes to the digest.",
+      "reference_options": [
+        "Include source links directly under each opportunity.",
+        "Include source links in a private dashboard.",
+        "Include a source count and report link.",
+        "Include full source log link only for internal teams."
+      ],
+      "recommended_fields": [
+        "source_url",
+        "source_name",
+        "collection_date",
+        "evidence_summary"
+      ],
+      "risk_notes": [
+        "Do not include private source links.",
+        "Do not include copyrighted full text.",
+        "Do not expose internal notes accidentally."
+      ]
+    },
+    {
+      "id": "node_007",
+      "name": "Add Disclaimer",
+      "type": "message_append",
+      "purpose": "Append a clear research disclaimer to the digest.",
+      "recommended_disclaimer": "This digest is based on public web signals and AI-assisted analysis. It is intended for research and informational purposes only. It does not guarantee product demand, sales, profit, or business success. Users should verify all sources and conduct their own due diligence before making business decisions.",
+      "risk_notes": [
+        "Do not remove disclaimer from public or paid digests.",
+        "The disclaimer should be visible and easy to understand."
+      ]
+    },
+    {
+      "id": "node_008",
+      "name": "Message Safety Check",
+      "type": "validation",
+      "purpose": "Check the final digest for unsafe claims, private data, spam language, or missing disclaimer.",
+      "checks": [
+        "Does the message include private personal data?",
+        "Does it include emails, phone numbers, addresses, or private profiles?",
+        "Does it claim guaranteed sales, profit, or demand?",
+        "Does it use fake urgency or misleading income language?",
+        "Does it include unsupported health, financial, legal, or medical claims?",
+        "Does it include copied copyrighted text?",
+        "Does it include the required disclaimer?",
+        "Are high-risk ideas clearly marked?"
+      ],
+      "routing": {
+        "safe_message": "node_009",
+        "needs_revision": "node_005",
+        "unsafe_message": "node_008_rejected_log"
+      },
+      "risk_notes": [
+        "If private data appears, reject the message.",
+        "If guaranteed income claims appear, rewrite before sending.",
+        "If disclaimer is missing, add it before sending."
+      ]
+    },
+    {
+      "id": "node_009",
+      "name": "Human Approval Gate",
+      "type": "manual_review",
+      "purpose": "Require human approval before sending the digest to public, paid, or subscriber channels.",
+      "approval_required_for": [
+        "Paid Telegram channels",
+        "Public Telegram channels",
+        "Client reports",
+        "Newsletter previews",
+        "External community delivery"
+      ],
+      "approval_optional_for": [
+        "Private personal testing",
+        "Internal draft channel",
+        "Local development environment"
+      ],
+      "review_checklist": [
+        "Sources are public.",
+        "Source links or source references are available.",
+        "No private personal data is included.",
+        "No unsupported claims are included.",
+        "No guaranteed income language is included.",
+        "Risk notes are included.",
+        "Disclaimer is included.",
+        "Message is useful and concise."
+      ],
+      "routing": {
+        "approved": "node_010",
+        "needs_revision": "node_005",
+        "rejected": "node_009_rejected_archive"
+      }
+    },
+    {
+      "id": "node_010",
+      "name": "Send Telegram Message",
+      "type": "delivery",
+      "purpose": "Send the approved digest to a Telegram channel, group, or private chat.",
+      "telegram_configuration": {
+        "bot_token": "{{TELEGRAM_BOT_TOKEN_SECRET}}",
+        "chat_id": "{{TELEGRAM_CHAT_ID}}",
+        "parse_mode": "plain_text_or_markdown",
+        "disable_web_page_preview": true
+      },
+      "safe_delivery_rules": [
+        "Use secure secret storage for bot token.",
+        "Do not hardcode bot token in public repositories.",
+        "Send only to approved opt-in destinations.",
+        "Do not send unsolicited mass messages.",
+        "Do not use scraped contact lists.",
+        "Do not use the workflow for spam."
+      ],
+      "risk_notes": [
+        "Never commit real bot tokens to GitHub.",
+        "Manage channel permissions carefully.",
+        "Avoid exposing paid report content in public channels by mistake."
+      ]
+    },
+    {
+      "id": "node_011",
+      "name": "Log Delivery Result",
+      "type": "logging",
+      "purpose": "Record whether the digest was sent successfully.",
+      "log_fields": [
+        "workflow_run_id",
+        "send_date",
+        "delivery_channel",
+        "chat_id_or_channel_name",
+        "message_id",
+        "record_count",
+        "status",
+        "error_message",
+        "reviewer",
+        "notes"
+      ],
+      "risk_notes": [
+        "Do not store bot tokens in logs.",
+        "Do not log private chat content unnecessarily.",
+        "Do not expose paid subscriber data."
+      ]
+    },
+    {
+      "id": "node_012",
+      "name": "Archive Digest",
+      "type": "archive",
+      "purpose": "Archive the sent digest and related records for future review.",
+      "archive_options": [
+        "Notion page",
+        "Google Drive document",
+        "Google Sheets delivery log",
+        "Markdown archive",
+        "Private repository",
+        "Database record"
+      ],
+      "archive_fields": [
+        "workflow_run_id",
+        "digest_date",
+        "region",
+        "category",
+        "top_opportunities",
+        "watchlist_items",
+        "risk_notes",
+        "disclaimer_included",
+        "delivery_status",
+        "reviewer_note"
+      ],
+      "risk_notes": [
+        "Do not archive private personal data.",
+        "Check sharing permissions.",
+        "Keep paid content access controlled."
+      ]
+    }
+  ],
+  "message_templates": {
+    "short_version": {
+      "description": "Short daily digest for quick internal updates.",
+      "template": "🚀 TrendPilot AI Daily Digest\n\nDate: {{DATE}}\nRegion: {{REGION}}\nCategory: {{CATEGORY}}\n\nTop Opportunities Today:\n\n1. {{PRODUCT_IDEA_1}}\nScore: {{SCORE_1}}\nConfidence: {{CONFIDENCE_1}}\nRisk: {{RISK_1}}\nWhy it matters: {{SHORT_REASON_1}}\n\n2. {{PRODUCT_IDEA_2}}\nScore: {{SCORE_2}}\nConfidence: {{CONFIDENCE_2}}\nRisk: {{RISK_2}}\nWhy it matters: {{SHORT_REASON_2}}\n\n3. {{PRODUCT_IDEA_3}}\nScore: {{SCORE_3}}\nConfidence: {{CONFIDENCE_3}}\nRisk: {{RISK_3}}\nWhy it matters: {{SHORT_REASON_3}}\n\nWatchlist:\n- {{WATCHLIST_ITEM_1}}\n- {{WATCHLIST_ITEM_2}}\n\nImportant:\nThis digest is for research only. It does not guarantee sales, profit, or product success."
+    },
+    "alert_version": {
+      "description": "Alert message when a product idea reaches a high opportunity score.",
+      "template": "🚨 New Trend Alert\n\nProduct:\n{{PRODUCT_IDEA}}\n\nCategory:\n{{CATEGORY}}\n\nRegion:\n{{REGION}}\n\nOpportunity Score:\n{{OPPORTUNITY_SCORE}}\n\nConfidence:\n{{CONFIDENCE_LEVEL}}\n\nRisk Level:\n{{RISK_LEVEL}}\n\nWhy it matters:\n{{TREND_REASON}}\n\nTarget Audience:\n{{TARGET_AUDIENCE}}\n\nConsumer Pain Point:\n{{PAIN_POINT}}\n\nSuggested Content Angle:\n{{CONTENT_ANGLE}}\n\nSuggested Next Action:\n{{NEXT_ACTION}}\n\nSource:\n{{SOURCE_LINK}}\n\nNote:\nThis is a research signal, not a guarantee of demand or sales."
+    },
+    "weekly_summary_version": {
+      "description": "Weekly summary message for an opt-in channel or internal team.",
+      "template": "📊 TrendPilot AI Weekly Brief\n\nWeek:\n{{WEEK}}\n\nRegion:\n{{REGION}}\n\nMain Categories Reviewed:\n{{CATEGORIES_REVIEWED}}\n\nTop 5 Opportunities:\n\n1. {{PRODUCT_1}} — Score: {{SCORE_1}} — Risk: {{RISK_1}}\n2. {{PRODUCT_2}} — Score: {{SCORE_2}} — Risk: {{RISK_2}}\n3. {{PRODUCT_3}} — Score: {{SCORE_3}} — Risk: {{RISK_3}}\n4. {{PRODUCT_4}} — Score: {{SCORE_4}} — Risk: {{RISK_4}}\n5. {{PRODUCT_5}} — Score: {{SCORE_5}} — Risk: {{RISK_5}}\n\nStrongest Category:\n{{STRONGEST_CATEGORY}}\n\nMain Consumer Theme:\n{{MAIN_CONSUMER_THEME}}\n\nMain Risk This Week:\n{{MAIN_RISK}}\n\nRecommended Next Action:\n{{RECOMMENDED_ACTION}}\n\nDisclaimer:\nFor research and informational purposes only. No sales or profit guaranteed."
+    }
+  },
+  "recommended_input_record": {
+    "record_id": "TRD-20260607-001",
+    "source_type": "Social",
+    "source_name": "Example Public Platform",
+    "source_url": "https://example.com/public-trend-page",
+    "collection_date": "2026-06-07",
+    "region": "United States",
+    "category": "Travel Accessories",
+    "keyword": "jewelry travel organizer",
+    "product_name": "Jewelry Travel Organizer",
+    "trend_signal": "Public travel packing content shows repeated interest in compact jewelry storage.",
+    "evidence_summary": "Visible public content suggests users want a cleaner way to store rings, earrings, and necklaces during travel.",
+    "target_audience": "Women travelers; jewelry owners; gift buyers",
+    "pain_point": "Jewelry can get tangled, scratched, or lost during travel.",
+    "content_angle": "Before-and-after packing routine showing messy jewelry versus organized travel case.",
+    "risk_note": "Avoid copying creator content or competitor images. Verify material claims and zipper quality.",
+    "confidence": "Medium",
+    "opportunity_score": 15,
+    "next_action": "Check marketplace pricing, review complaints, and supplier customization options.",
+    "review_status": "Approved"
+  },
+  "human_review_required_before": [
+    "Sending to a paid channel",
+    "Sending to a public channel",
+    "Sending to external subscribers",
+    "Using the digest as a paid report preview",
+    "Sending client-facing trend alerts",
+    "Publishing any high-score product recommendation"
+  ],
+  "what_this_workflow_should_not_do": [
+    "Send spam messages",
+    "Send unsolicited mass direct messages",
+    "Use scraped contact lists",
+    "Send private data",
+    "Send unreviewed high-risk product claims",
+    "Claim guaranteed sales or profit",
+    "Promote unsafe regulated products",
+    "Leak paid content to public channels",
+    "Expose Telegram bot tokens",
+    "Replace human review"
+  ],
+  "disclaimer": "This pseudo workflow is for educational and planning purposes only. It is designed to help users format and deliver opt-in trend intelligence digests. It does not guarantee product demand, sales, profit, engagement, or business success. Users should verify sources, review risks, protect private data, and comply with platform rules before sending any message."
+}
