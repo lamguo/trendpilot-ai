@@ -12,6 +12,37 @@ It does not guarantee product demand, sales, profit, or business success.
 
 # Telegram Trend Digest
 
+## Standard Fields
+
+TrendPilot AI digest messages should use the same standard fields as the source log and workflows.
+
+```text
+product_name
+category
+region
+trend_signal
+evidence_summary
+target_audience
+pain_point
+content_angle
+risk_note
+risk_level
+confidence
+opportunity_score
+next_action
+review_status
+source_url
+```
+
+Important:
+
+```text
+risk_note = human-readable explanation of the risk
+risk_level = standardized risk category: Low / Medium / High / Avoid / Unknown
+```
+
+---
+
 ## Short Version
 
 ```text
@@ -24,22 +55,28 @@ Category: {{CATEGORY}}
 Top Opportunities Today:
 
 1. {{PRODUCT_IDEA_1}}
-Score: {{SCORE_1}}
+Score: {{OPPORTUNITY_SCORE_1}}
 Confidence: {{CONFIDENCE_1}}
-Risk: {{RISK_1}}
+Risk Level: {{RISK_LEVEL_1}}
+Risk Note: {{RISK_NOTE_1}}
 Why it matters: {{SHORT_REASON_1}}
+Next action: {{NEXT_ACTION_1}}
 
 2. {{PRODUCT_IDEA_2}}
-Score: {{SCORE_2}}
+Score: {{OPPORTUNITY_SCORE_2}}
 Confidence: {{CONFIDENCE_2}}
-Risk: {{RISK_2}}
+Risk Level: {{RISK_LEVEL_2}}
+Risk Note: {{RISK_NOTE_2}}
 Why it matters: {{SHORT_REASON_2}}
+Next action: {{NEXT_ACTION_2}}
 
 3. {{PRODUCT_IDEA_3}}
-Score: {{SCORE_3}}
+Score: {{OPPORTUNITY_SCORE_3}}
 Confidence: {{CONFIDENCE_3}}
-Risk: {{RISK_3}}
+Risk Level: {{RISK_LEVEL_3}}
+Risk Note: {{RISK_NOTE_3}}
 Why it matters: {{SHORT_REASON_3}}
+Next action: {{NEXT_ACTION_3}}
 
 Watchlist:
 - {{WATCHLIST_ITEM_1}}
@@ -81,13 +118,16 @@ Why it may matter:
 {{TREND_REASON_1}}
 
 Opportunity Score:
-{{SCORE_1}}
+{{OPPORTUNITY_SCORE_1}}
 
 Confidence:
 {{CONFIDENCE_1}}
 
 Risk Level:
 {{RISK_LEVEL_1}}
+
+Risk Note:
+{{RISK_NOTE_1}}
 
 Suggested Next Action:
 {{NEXT_ACTION_1}}
@@ -112,13 +152,16 @@ Why it may matter:
 {{TREND_REASON_2}}
 
 Opportunity Score:
-{{SCORE_2}}
+{{OPPORTUNITY_SCORE_2}}
 
 Confidence:
 {{CONFIDENCE_2}}
 
 Risk Level:
 {{RISK_LEVEL_2}}
+
+Risk Note:
+{{RISK_NOTE_2}}
 
 Suggested Next Action:
 {{NEXT_ACTION_2}}
@@ -143,13 +186,16 @@ Why it may matter:
 {{TREND_REASON_3}}
 
 Opportunity Score:
-{{SCORE_3}}
+{{OPPORTUNITY_SCORE_3}}
 
 Confidence:
 {{CONFIDENCE_3}}
 
 Risk Level:
 {{RISK_LEVEL_3}}
+
+Risk Note:
+{{RISK_NOTE_3}}
 
 Suggested Next Action:
 {{NEXT_ACTION_3}}
@@ -163,22 +209,32 @@ Source:
 
 - {{WATCHLIST_ITEM_1}}
 Reason: {{WATCHLIST_REASON_1}}
+Confidence: {{WATCHLIST_CONFIDENCE_1}}
+Risk Level: {{WATCHLIST_RISK_LEVEL_1}}
 
 - {{WATCHLIST_ITEM_2}}
 Reason: {{WATCHLIST_REASON_2}}
+Confidence: {{WATCHLIST_CONFIDENCE_2}}
+Risk Level: {{WATCHLIST_RISK_LEVEL_2}}
 
 - {{WATCHLIST_ITEM_3}}
 Reason: {{WATCHLIST_REASON_3}}
+Confidence: {{WATCHLIST_CONFIDENCE_3}}
+Risk Level: {{WATCHLIST_RISK_LEVEL_3}}
 
 ━━━━━━━━━━━━━━━━━━━━
 
 ⚠️ High-Risk Ideas
 
+These items should not be treated as recommended opportunities without deeper review.
+
 - {{HIGH_RISK_ITEM_1}}
-Risk: {{HIGH_RISK_REASON_1}}
+Risk Level: {{HIGH_RISK_LEVEL_1}}
+Risk Note: {{HIGH_RISK_REASON_1}}
 
 - {{HIGH_RISK_ITEM_2}}
-Risk: {{HIGH_RISK_REASON_2}}
+Risk Level: {{HIGH_RISK_LEVEL_2}}
+Risk Note: {{HIGH_RISK_REASON_2}}
 
 ━━━━━━━━━━━━━━━━━━━━
 
@@ -200,6 +256,8 @@ This digest is based on public web signals and AI-assisted analysis. It is for r
 
 Use this format when a product idea reaches a high opportunity score.
 
+Only use this for records that have been reviewed and do not carry High, Avoid, or Unknown risk levels.
+
 ```text
 🚨 New Trend Alert
 
@@ -220,6 +278,9 @@ Confidence:
 
 Risk Level:
 {{RISK_LEVEL}}
+
+Risk Note:
+{{RISK_NOTE}}
 
 Why it matters:
 {{TREND_REASON}}
@@ -261,11 +322,11 @@ Main Categories Reviewed:
 
 Top 5 Opportunities:
 
-1. {{PRODUCT_1}} — Score: {{SCORE_1}} — Risk: {{RISK_1}}
-2. {{PRODUCT_2}} — Score: {{SCORE_2}} — Risk: {{RISK_2}}
-3. {{PRODUCT_3}} — Score: {{SCORE_3}} — Risk: {{RISK_3}}
-4. {{PRODUCT_4}} — Score: {{SCORE_4}} — Risk: {{RISK_4}}
-5. {{PRODUCT_5}} — Score: {{SCORE_5}} — Risk: {{RISK_5}}
+1. {{PRODUCT_1}} — Score: {{SCORE_1}} — Confidence: {{CONFIDENCE_1}} — Risk Level: {{RISK_LEVEL_1}}
+2. {{PRODUCT_2}} — Score: {{SCORE_2}} — Confidence: {{CONFIDENCE_2}} — Risk Level: {{RISK_LEVEL_2}}
+3. {{PRODUCT_3}} — Score: {{SCORE_3}} — Confidence: {{CONFIDENCE_3}} — Risk Level: {{RISK_LEVEL_3}}
+4. {{PRODUCT_4}} — Score: {{SCORE_4}} — Confidence: {{CONFIDENCE_4}} — Risk Level: {{RISK_LEVEL_4}}
+5. {{PRODUCT_5}} — Score: {{SCORE_5}} — Confidence: {{CONFIDENCE_5}} — Risk Level: {{RISK_LEVEL_5}}
 
 Strongest Category:
 {{STRONGEST_CATEGORY}}
@@ -293,9 +354,10 @@ For research and informational purposes only. No sales or profit guaranteed.
 | REGION | Target country or market |
 | CATEGORY | Product category |
 | PRODUCT_IDEA | Product or category idea |
-| SCORE | Product opportunity score |
+| OPPORTUNITY_SCORE | Product opportunity score |
 | CONFIDENCE | Low, Medium, or High |
-| RISK | Low, Medium, or High |
+| RISK_LEVEL | Low, Medium, High, Avoid, or Unknown |
+| RISK_NOTE | Human-readable explanation of the risk |
 | TREND_SIGNAL | Public signal summary |
 | TREND_REASON | Why the idea may be worth watching |
 | TARGET_AUDIENCE | Likely buyer group |
@@ -303,7 +365,40 @@ For research and informational purposes only. No sales or profit guaranteed.
 | CONTENT_ANGLE | Suggested content idea |
 | NEXT_ACTION | Suggested next research step |
 | SOURCE_LINK | Public source URL |
-| REVIEW_STATUS | Draft, Reviewed, or Approved |
+| REVIEW_STATUS | Draft, Needs Review, Approved, Rejected, or Watchlist |
+
+---
+
+## Risk Level Rules
+
+For public or paid digest delivery:
+
+| Risk Level | Suggested Use |
+|---|---|
+| Low | Can be included after review |
+| Medium | Can be included after review, with risk note |
+| High | Do not include as a top opportunity |
+| Avoid | Exclude from digest |
+| Unknown | Mark as Needs Review before use |
+
+Recommended filter for top opportunities:
+
+```text
+review_status = Approved
+confidence = Medium or High
+risk_level = Low or Medium
+```
+
+Avoid using these records in public or paid digest sections:
+
+```text
+review_status = Draft
+review_status = Needs Review
+review_status = Rejected
+risk_level = High
+risk_level = Avoid
+risk_level = Unknown
+```
 
 ---
 
@@ -330,6 +425,8 @@ Avoid:
 - Fake urgency
 - Guaranteed sales claims
 - “Auto money” language
+- Hiding risk level
+- Removing disclaimers
 
 ---
 
@@ -361,3 +458,21 @@ Do not use this template for:
 - Private data distribution
 - Scraped contact list outreach
 - Platform abuse
+- High-risk product promotion without review
+
+---
+
+## Human Review Checklist
+
+Before sending a digest, confirm:
+
+- [ ] Records are from public sources
+- [ ] Source links or source references are available
+- [ ] Review status is Approved
+- [ ] Confidence level is included
+- [ ] Risk level is included
+- [ ] Risk note is included
+- [ ] High / Avoid / Unknown risk records are excluded from top opportunities
+- [ ] No private personal data is included
+- [ ] No guaranteed sales or profit claims are included
+- [ ] Disclaimer is included
