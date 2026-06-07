@@ -17,7 +17,7 @@ This report does not guarantee product demand, sales, profit, or business succes
 **Target Platform / Marketplace:**  
 **Prepared By:**  
 **Date:**  
-**Review Status:** Draft / Reviewed / Approved  
+**Review Status:** Draft / Needs Review / Approved / Rejected / Watchlist  
 
 ---
 
@@ -481,7 +481,7 @@ Explain the most important risks.
 Choose one:
 
 ```text
-Low / Medium / High
+Low / Medium / High / Avoid / Unknown
 ```
 
 ### Recommendation
