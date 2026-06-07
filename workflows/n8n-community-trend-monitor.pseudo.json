@@ -1,9 +1,9 @@
 {
   "name": "TrendPilot AI - Public Community Trend Monitor Pseudo Workflow",
   "type": "pseudo-workflow",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "status": "planning-template",
-  "description": "A license-safe pseudo workflow for monitoring public community discussions, extracting repeated pain points, summarizing buyer language, and generating product opportunity notes.",
+  "description": "A license-safe pseudo workflow for monitoring public community discussions, extracting repeated pain points, summarizing buyer language, generating product opportunity notes, classifying risk level, and saving structured records.",
   "important_notice": [
     "This is not a real n8n export file.",
     "This file is a pseudo workflow design for planning and educational purposes.",
@@ -23,6 +23,46 @@
     "Respect community rules and platform terms.",
     "Use human review before publishing or monetizing insights."
   ],
+  "standard_fields": [
+    "record_id",
+    "source_type",
+    "source_name",
+    "source_url",
+    "collection_date",
+    "publication_date",
+    "region",
+    "category",
+    "keyword",
+    "product_name",
+    "trend_signal",
+    "evidence_summary",
+    "target_audience",
+    "pain_point",
+    "content_angle",
+    "price_signal",
+    "competition_signal",
+    "risk_note",
+    "risk_level",
+    "confidence",
+    "opportunity_score",
+    "next_action",
+    "review_status",
+    "reviewer_note"
+  ],
+  "risk_level_values": [
+    "Low",
+    "Medium",
+    "High",
+    "Avoid",
+    "Unknown"
+  ],
+  "review_status_values": [
+    "Draft",
+    "Needs Review",
+    "Approved",
+    "Rejected",
+    "Watchlist"
+  ],
   "recommended_stack": {
     "scheduler": "n8n or cron",
     "public_data_collection": "RSS feeds, public APIs, search APIs, Firecrawl, or manual source lists",
@@ -32,9 +72,9 @@
     "human_review": "Manual review step before publishing or monetization"
   },
   "workflow_summary": {
-    "goal": "Monitor public community discussions for repeated consumer problems, product complaints, buying questions, and niche language.",
+    "goal": "Monitor public community discussions for repeated consumer problems, product complaints, buying questions, niche language, and product opportunity signals.",
     "input": "Public community source list and public discussion signals.",
-    "output": "Pain point summaries, buyer language notes, product opportunity ideas, content angles, and risk notes.",
+    "output": "Structured community trend records with pain points, buyer language, product ideas, risk notes, risk levels, confidence levels, and review status.",
     "recommended_frequency": "Daily or weekly",
     "human_review_required": true
   },
@@ -64,9 +104,9 @@
       "type": "data_input",
       "purpose": "Load a curated list of public communities, topics, or discussion pages to review.",
       "example_sources": [
-        "public Reddit subreddit page",
-        "public forum discussion page",
+        "public Reddit discussion page",
         "public Quora question page",
+        "public forum discussion page",
         "public product community page",
         "public hobby forum page",
         "public review discussion page"
@@ -111,6 +151,7 @@
       "rejected_log_fields": [
         "source_id",
         "source_url",
+        "risk_level",
         "rejection_reason",
         "review_status"
       ],
@@ -147,7 +188,9 @@
         "visible_complaints",
         "visible_desired_features",
         "raw_summary",
-        "collection_date"
+        "collection_date",
+        "risk_note",
+        "risk_level"
       ],
       "risk_notes": [
         "Do not collect usernames.",
@@ -171,7 +214,8 @@
         "Summarize buyer language patterns.",
         "Keep source URL.",
         "Add collection date.",
-        "Add risk note if needed."
+        "Add risk note if needed.",
+        "Add or normalize risk level."
       ],
       "output_schema": {
         "record_id": "string",
@@ -187,12 +231,14 @@
         "pain_point_summary": "string",
         "buyer_language_summary": "string",
         "product_mentions": "string",
-        "risk_note": "string"
+        "risk_note": "string",
+        "risk_level": "Low | Medium | High | Avoid | Unknown"
       },
       "risk_notes": [
         "Use summaries, not long quotes.",
         "Avoid personal identifiers.",
-        "Keep source links for traceability."
+        "Keep source links for traceability.",
+        "If risk level is unclear, set it to Unknown and mark output as Needs Review."
       ]
     },
     {
@@ -213,7 +259,8 @@
         "pain_point_summary",
         "buyer_language_summary",
         "product_mentions",
-        "risk_note"
+        "risk_note",
+        "risk_level"
       ],
       "output_fields": [
         "main_pain_points",
@@ -226,7 +273,9 @@
         "bundle_opportunities",
         "content_angle_notes",
         "uncertainty_notes",
-        "confidence_level"
+        "confidence",
+        "risk_note",
+        "risk_level"
       ],
       "ai_rules": [
         "Use only provided public discussion signals.",
@@ -234,7 +283,8 @@
         "Do not copy full comments.",
         "Do not include usernames or private information.",
         "Summarize patterns in original words.",
-        "Mark weak evidence as Low confidence."
+        "Mark weak evidence as Low confidence.",
+        "Return risk_note and risk_level separately."
       ]
     },
     {
@@ -251,7 +301,9 @@
         "buyer_objections",
         "product_improvement_opportunities",
         "content_angle_notes",
-        "confidence_level"
+        "confidence",
+        "risk_note",
+        "risk_level"
       ],
       "output_fields": [
         "product_idea",
@@ -266,6 +318,8 @@
         "source_evidence_summary",
         "uncertainty",
         "confidence",
+        "risk_note",
+        "risk_level",
         "suggested_next_action"
       ],
       "risk_notes": [
@@ -276,6 +330,29 @@
     },
     {
       "id": "node_008",
+      "name": "Product Opportunity Scoring",
+      "type": "ai_scoring",
+      "purpose": "Optionally score community-derived product ideas before saving them to the source log.",
+      "recommended_prompt_file": "prompts/product-scoring-prompt.md",
+      "formula": "Opportunity Score = Demand Signal + Social Visibility + Price Potential + Supplier Availability + Differentiation Potential - Competition Level - Shipping Difficulty - Compliance Risk",
+      "output_fields": [
+        "final_opportunity_score",
+        "score_interpretation",
+        "confidence",
+        "main_strengths",
+        "main_risks",
+        "risk_note",
+        "risk_level",
+        "validation_steps"
+      ],
+      "risk_notes": [
+        "Community signals alone are not enough for a final score.",
+        "If marketplace, price, or supplier data is missing, reduce confidence.",
+        "A high score does not guarantee sales."
+      ]
+    },
+    {
+      "id": "node_009",
       "name": "Risk Check",
       "type": "ai_risk_review",
       "purpose": "Review community-derived product ideas for compliance, privacy, claim, IP, platform, and product safety risks.",
@@ -294,7 +371,9 @@
       ],
       "output_fields": [
         "overall_risk_level",
+        "risk_level",
         "risk_summary",
+        "risk_note",
         "risk_checklist",
         "claims_to_remove_or_rewrite",
         "safer_wording_suggestions",
@@ -302,44 +381,53 @@
         "recommended_decision"
       ],
       "routing": {
-        "low_risk": "node_009",
-        "medium_risk": "node_009",
-        "high_risk": "node_008_needs_review_log",
-        "avoid": "node_008_rejected_log"
-      }
+        "low_risk": "node_010",
+        "medium_risk": "node_010",
+        "high_risk": "node_009_needs_review_log",
+        "avoid": "node_009_rejected_log"
+      },
+      "risk_notes": [
+        "Risk note explains the risk.",
+        "Risk level classifies the severity.",
+        "High and Avoid risk levels should not be automatically approved."
+      ]
     },
     {
-      "id": "node_009",
+      "id": "node_010",
       "name": "Create Community Insight Record",
       "type": "data_mapping",
-      "purpose": "Merge source data, AI pain point analysis, opportunity notes, and risk review into one structured record.",
+      "purpose": "Merge source data, AI pain point analysis, opportunity notes, scoring, and risk review into one structured record.",
       "output_schema": {
         "record_id": "string",
         "source_type": "Community",
         "source_name": "string",
         "source_url": "string",
         "collection_date": "YYYY-MM-DD",
+        "publication_date": "YYYY-MM-DD or empty",
         "region": "string",
         "category": "string",
-        "topic": "string",
         "keyword": "string",
         "product_name": "string",
         "trend_signal": "string",
         "evidence_summary": "string",
         "target_audience": "string",
         "pain_point": "string",
-        "buyer_language": "string",
         "content_angle": "string",
+        "price_signal": "string",
+        "competition_signal": "string",
         "risk_note": "string",
+        "risk_level": "Low | Medium | High | Avoid | Unknown",
         "confidence": "Low | Medium | High",
+        "opportunity_score": "number or empty",
         "next_action": "string",
         "review_status": "Draft | Needs Review | Approved | Rejected | Watchlist",
         "reviewer_note": "string"
       },
-      "default_review_status": "Draft"
+      "default_review_status": "Draft",
+      "default_risk_level": "Unknown"
     },
     {
-      "id": "node_010",
+      "id": "node_011",
       "name": "Save to Source Log",
       "type": "storage",
       "purpose": "Save community insight records to a structured reviewable log.",
@@ -355,11 +443,12 @@
         "Do not store private personal data.",
         "Do not store usernames unless absolutely necessary for citation.",
         "Do not store scraped personal contact data.",
-        "Manage access permissions carefully."
+        "Manage access permissions carefully.",
+        "Use the standard source log fields, including risk_note and risk_level."
       ]
     },
     {
-      "id": "node_011",
+      "id": "node_012",
       "name": "Generate Community Insight Summary",
       "type": "report_generation",
       "purpose": "Create a short summary of community-derived trends and pain points for human review.",
@@ -371,6 +460,7 @@
         "Content Angle Ideas",
         "Watchlist Items",
         "Risk Notes",
+        "Risk Levels",
         "Suggested Next Actions"
       ],
       "output_formats": [
@@ -383,11 +473,12 @@
       "risk_notes": [
         "Do not publish without human review.",
         "Do not copy long user comments.",
-        "Do not include personal data."
+        "Do not include personal data.",
+        "Do not remove risk levels."
       ]
     },
     {
-      "id": "node_012",
+      "id": "node_013",
       "name": "Human Review Gate",
       "type": "manual_review",
       "purpose": "Require human review before publishing, selling, or sending community-derived insights.",
@@ -402,16 +493,19 @@
         "No product success is guaranteed.",
         "Confidence levels are included.",
         "Risk notes are included.",
+        "Risk levels are included.",
+        "High-risk ideas are clearly marked.",
+        "Avoid-risk ideas are excluded or rejected.",
         "Human reviewer has checked the final summary."
       ],
       "routing": {
-        "approved": "node_013",
-        "needs_revision": "node_011",
-        "rejected": "node_012_rejected_archive"
+        "approved": "node_014",
+        "needs_revision": "node_012",
+        "rejected": "node_013_rejected_archive"
       }
     },
     {
-      "id": "node_013",
+      "id": "node_014",
       "name": "Send Internal Digest",
       "type": "delivery",
       "purpose": "Send approved community insight summaries to an internal team or opt-in channel.",
@@ -428,14 +522,15 @@
         "Do not send unsolicited mass messages.",
         "Do not use scraped contact lists.",
         "Include disclaimer.",
-        "Keep source links available."
+        "Keep source links available.",
+        "Exclude High, Avoid, or Unknown risk records from top opportunities."
       ]
     },
     {
-      "id": "node_014",
+      "id": "node_015",
       "name": "Archive Community Insights",
       "type": "archive",
-      "purpose": "Archive source records, insight summaries, and review status.",
+      "purpose": "Archive source records, insight summaries, risk levels, and review status.",
       "archive_fields": [
         "workflow_run_id",
         "report_date",
@@ -445,6 +540,8 @@
         "approved_count",
         "watchlist_count",
         "rejected_count",
+        "high_risk_count",
+        "avoid_risk_count",
         "summary_url",
         "reviewer",
         "review_notes"
@@ -470,19 +567,22 @@
     "source_name": "Example Public Community",
     "source_url": "https://example.com/public-discussion",
     "collection_date": "2026-06-07",
+    "publication_date": "",
     "region": "United States",
     "category": "Travel Accessories",
-    "topic": "Jewelry packing for travel",
     "keyword": "jewelry travel organizer",
     "product_name": "Jewelry Travel Organizer",
     "trend_signal": "Public discussions mention frustration with jewelry getting tangled or lost during trips.",
     "evidence_summary": "Visible public discussion patterns suggest travelers want small, organized ways to store rings, earrings, and necklaces.",
     "target_audience": "Women travelers; jewelry owners; gift buyers",
     "pain_point": "Jewelry can get tangled, scratched, or misplaced while traveling.",
-    "buyer_language": "How do I pack jewelry for travel without tangling necklaces?",
     "content_angle": "Travel packing routine showing messy jewelry versus organized compact case.",
+    "price_signal": "Needs marketplace validation",
+    "competition_signal": "Unknown",
     "risk_note": "Avoid copying user comments directly. Avoid collecting usernames or personal details.",
+    "risk_level": "Medium",
     "confidence": "Medium",
+    "opportunity_score": "",
     "next_action": "Check marketplace price range, public review complaints, and supplier options.",
     "review_status": "Draft",
     "reviewer_note": ""
