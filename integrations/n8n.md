@@ -210,6 +210,7 @@ content_angle
 price_signal
 competition_signal
 risk_note
+risk_level
 confidence
 opportunity_score
 next_action
@@ -669,6 +670,7 @@ Before sending any report or digest, confirm:
 - [ ] No product success is guaranteed
 - [ ] Confidence levels are included
 - [ ] Risk notes are included
+- [ ] Risk levels are included
 - [ ] Disclaimer is included
 - [ ] Human reviewer has approved the output
 
@@ -727,7 +729,7 @@ Pseudo workflows:
 
 ```text
 workflows/n8n-daily-trend-intelligence.pseudo.json
-workflows/n8n-reddit-trend-monitor.pseudo.json
+workflows/n8n-community-trend-monitor.pseudo.json
 workflows/n8n-google-sheets-output.pseudo.json
 workflows/n8n-telegram-digest.pseudo.json
 ```
