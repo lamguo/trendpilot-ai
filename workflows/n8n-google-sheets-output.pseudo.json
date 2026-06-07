@@ -1,7 +1,7 @@
 {
   "name": "TrendPilot AI - Google Sheets Output Pseudo Workflow",
   "type": "pseudo-workflow",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "status": "planning-template",
   "description": "A license-safe pseudo workflow for saving AI-assisted trend intelligence records into a structured Google Sheets research log.",
   "important_notice": [
@@ -17,7 +17,7 @@
     "Do not store scraped personal emails, phone numbers, addresses, usernames, or private profiles.",
     "Do not store API keys or secrets in Google Sheets.",
     "Do not make private research sheets public accidentally.",
-    "Keep source links, confidence levels, risk notes, and review status.",
+    "Keep source links, confidence levels, risk notes, risk levels, and review status.",
     "Use human review before publishing, selling, or sending reports."
   ],
   "recommended_stack": {
@@ -34,7 +34,8 @@
     "related_templates": [
       "templates/source-log-template.csv",
       "templates/daily-trend-report.md",
-      "templates/product-opportunity-scorecard.md"
+      "templates/product-opportunity-scorecard.md",
+      "templates/telegram-digest-template.md"
     ]
   },
   "workflow_summary": {
@@ -43,6 +44,32 @@
     "output": "Rows added to a Google Sheets source log.",
     "human_review_required": true
   },
+  "standard_fields": [
+    "record_id",
+    "source_type",
+    "source_name",
+    "source_url",
+    "collection_date",
+    "publication_date",
+    "region",
+    "category",
+    "keyword",
+    "product_name",
+    "trend_signal",
+    "evidence_summary",
+    "target_audience",
+    "pain_point",
+    "content_angle",
+    "price_signal",
+    "competition_signal",
+    "risk_note",
+    "risk_level",
+    "confidence",
+    "opportunity_score",
+    "next_action",
+    "review_status",
+    "reviewer_note"
+  ],
   "pseudo_nodes": [
     {
       "id": "node_001",
@@ -74,13 +101,15 @@
         "price_signal",
         "competition_signal",
         "risk_note",
+        "risk_level",
         "confidence",
         "opportunity_score",
         "next_action"
       ],
       "risk_notes": [
         "Input should not include private personal data.",
-        "Input should not include full copyrighted articles, full reviews, or copied competitor listings."
+        "Input should not include full copyrighted articles, full reviews, or copied competitor listings.",
+        "Input should include both risk_note and risk_level when available."
       ]
     },
     {
@@ -98,6 +127,7 @@
         "trend_signal",
         "evidence_summary",
         "risk_note",
+        "risk_level",
         "confidence"
       ],
       "routing": {
@@ -113,7 +143,8 @@
       ],
       "risk_notes": [
         "Do not save incomplete records as approved research.",
-        "If source URL is missing, mark the record as Needs Review."
+        "If source_url is missing, mark the record as Needs Review.",
+        "If risk_level is missing, set it to Unknown and mark the record as Needs Review."
       ]
     },
     {
@@ -146,12 +177,19 @@
       "id": "node_004",
       "name": "Normalize Record Fields",
       "type": "data_processing",
-      "purpose": "Normalize field names, confidence levels, review status, and risk notes before saving.",
+      "purpose": "Normalize field names, confidence levels, risk levels, review status, and risk notes before saving.",
       "normalization_rules": {
         "confidence": [
           "Low",
           "Medium",
           "High"
+        ],
+        "risk_level": [
+          "Low",
+          "Medium",
+          "High",
+          "Avoid",
+          "Unknown"
         ],
         "review_status": [
           "Draft",
@@ -174,7 +212,8 @@
         "review_status": "Draft",
         "reviewer_note": "",
         "publication_date": "",
-        "opportunity_score": ""
+        "opportunity_score": "",
+        "risk_level": "Unknown"
       },
       "output": "normalized_trend_record"
     },
@@ -219,6 +258,7 @@
         "price_signal": "{{price_signal}}",
         "competition_signal": "{{competition_signal}}",
         "risk_note": "{{risk_note}}",
+        "risk_level": "{{risk_level}}",
         "confidence": "{{confidence}}",
         "opportunity_score": "{{opportunity_score}}",
         "next_action": "{{next_action}}",
@@ -276,6 +316,7 @@
         "price_signal",
         "competition_signal",
         "risk_note",
+        "risk_level",
         "confidence",
         "opportunity_score",
         "next_action",
@@ -292,22 +333,34 @@
       "id": "node_009",
       "name": "Add Review Status Logic",
       "type": "data_processing",
-      "purpose": "Assign or update review status based on risk, confidence, and source quality.",
+      "purpose": "Assign or update review status based on risk_level, confidence, source quality, and opportunity score.",
       "example_rules": [
         {
           "condition": "confidence is Low",
           "review_status": "Watchlist"
         },
         {
-          "condition": "risk_note contains high risk or compliance concern",
+          "condition": "risk_level is Unknown",
           "review_status": "Needs Review"
+        },
+        {
+          "condition": "risk_level is Medium",
+          "review_status": "Needs Review"
+        },
+        {
+          "condition": "risk_level is High",
+          "review_status": "Needs Review"
+        },
+        {
+          "condition": "risk_level is Avoid",
+          "review_status": "Rejected"
         },
         {
           "condition": "source_url is missing",
           "review_status": "Needs Review"
         },
         {
-          "condition": "opportunity_score is high but risk is high",
+          "condition": "opportunity_score is high but risk_level is High",
           "review_status": "Needs Review"
         },
         {
@@ -317,7 +370,8 @@
       ],
       "risk_notes": [
         "Do not automatically approve records for paid reports without human review.",
-        "AI-generated records should start as Draft or Needs Review."
+        "AI-generated records should start as Draft or Needs Review.",
+        "Risk level and review status should remain separate fields."
       ]
     },
     {
@@ -334,7 +388,9 @@
         "rejected_records",
         "top_opportunity_score",
         "most_common_category",
-        "highest_risk_category"
+        "highest_risk_category",
+        "high_risk_record_count",
+        "avoid_record_count"
       ],
       "possible_outputs": [
         "summary row",
@@ -362,7 +418,8 @@
       ],
       "risk_notes": [
         "Only approved or reviewed records should be used for public or paid reports.",
-        "Draft records can be used for internal review only."
+        "Draft records can be used for internal review only.",
+        "Avoid risk_level records should not be sent to any public digest."
       ]
     },
     {
@@ -376,6 +433,7 @@
         "source_url",
         "error_type",
         "error_message",
+        "risk_level",
         "risk_reason",
         "created_at",
         "review_status"
@@ -394,7 +452,7 @@
     },
     {
       "tab_name": "daily_summary",
-      "purpose": "Daily aggregated summary by date, category, score, and review status."
+      "purpose": "Daily aggregated summary by date, category, score, risk level, and review status."
     },
     {
       "tab_name": "watchlist",
@@ -406,7 +464,7 @@
     },
     {
       "tab_name": "settings",
-      "purpose": "Source lists, allowed regions, categories, and workflow settings."
+      "purpose": "Source lists, allowed regions, categories, risk levels, and workflow settings."
     }
   ],
   "recommended_source_log_columns": [
@@ -428,6 +486,7 @@
     "price_signal",
     "competition_signal",
     "risk_note",
+    "risk_level",
     "confidence",
     "opportunity_score",
     "next_action",
@@ -439,7 +498,8 @@
     "Needs Review records require human inspection.",
     "Approved records may be used in reports after review.",
     "Rejected records should not be used.",
-    "Watchlist records should be monitored but not treated as confirmed opportunities."
+    "Watchlist records should be monitored but not treated as confirmed opportunities.",
+    "Avoid risk level records should normally become Rejected unless manually corrected."
   ],
   "what_this_workflow_should_not_do": [
     "Store private personal data",
