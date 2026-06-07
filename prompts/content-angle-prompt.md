@@ -89,8 +89,12 @@ Generate:
 10. Ad concept ideas
 11. Visual scene suggestions
 12. Before-and-after demonstration ideas
-13. Risk and compliance notes
-14. Content ideas to avoid
+13. Content ideas to avoid
+14. Risk note
+15. Risk level
+16. Confidence level
+17. Suggested next action
+18. Review status
 
 Rules:
 - Use only the provided research signals.
@@ -225,18 +229,46 @@ Notes:
 2.
 3.
 
-## Risk and Compliance Notes
+## Risk Note
 
 [Explain advertising claim risks, platform risks, product claim risks, copyright risks, or content copying risks.]
 
-## Suggested Next Step
+## Risk Level
+
+Low / Medium / High / Avoid / Unknown
+
+## Confidence Level
+
+Low / Medium / High
+
+## Suggested Next Action
 
 [Suggest the next practical content validation step.]
+
+## Review Status
+
+Draft / Needs Review / Approved / Rejected / Watchlist
 
 ## Disclaimer
 
 This content plan is based on public trend signals and AI-assisted analysis. It is for research and content planning only. It does not guarantee views, engagement, product demand, sales, profit, or business success.
 ```
+
+---
+
+## Standard Review Field Rules
+
+Use the following standardized review fields when the output contains a product idea, content angle, pain point insight, report item, or risk decision:
+
+- **Risk Note:** Short human-readable explanation of uncertainty, compliance concerns, source limitations, product risk, or content risk.
+- **Risk Level:** Low / Medium / High / Avoid / Unknown
+- **Confidence Level:** Low / Medium / High
+- **Suggested Next Action:** Clear next step for validation, source checking, human review, testing, or rejection.
+- **Review Status:** Draft / Needs Review / Approved / Rejected / Watchlist
+
+Do not combine `Risk Note` and `Risk Level` into one field.
+Use `Unknown` when the available evidence is insufficient to judge risk.
+Do not mark an item as `Approved` unless a human reviewer has checked the source and context.
 
 ---
 
@@ -634,13 +666,25 @@ This product can be included in a travel organization trend report as a small, l
 2. Do not copy competitor product photos.
 3. Do not use creator travel videos without permission.
 
-## Risk and Compliance Notes
+## Risk Note
 
 Avoid material claims such as leather or waterproof unless verified. Avoid copying competitor images, captions, or exact product designs. Do not imply guaranteed protection from all damage.
 
-## Suggested Next Step
+## Risk Level
+
+Medium
+
+## Confidence Level
+
+Medium
+
+## Suggested Next Action
 
 Create three short-form content tests: one before-and-after, one packing routine, and one gift guide angle.
+
+## Review Status
+
+Needs Review
 
 ## Disclaimer
 
