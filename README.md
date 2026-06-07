@@ -111,7 +111,11 @@ trendpilot-ai/
 │   ├── sample-daily-report-en.md
 │   ├── sample-daily-report-cn.md
 │   ├── sample-product-score.csv
-│   └── sample-source-log.csv
+│   ├── sample-source-log.csv
+│   └── python/
+│       ├── README.md
+│       ├── daily_report_generator.py
+│       └── score_product_idea.py
 ├── workflows/
 │   ├── README.md
 │   ├── n8n-daily-trend-intelligence.pseudo.json
@@ -191,6 +195,17 @@ Use the examples to understand the expected output style and field structure:
 - [Sample Source Log CSV](examples/sample-source-log.csv)
 
 The examples use fictional sample data for structure demonstration only.
+
+### 7. Run lightweight Python examples
+
+Use the Python examples to generate a simple Markdown report or score a product idea locally:
+
+- [Python Examples README](examples/python/README.md)
+- [Daily Report Generator](examples/python/daily_report_generator.py)
+- [Product Idea Scoring Script](examples/python/score_product_idea.py)
+
+These scripts use only the Python standard library.
+They do not scrape websites, call external APIs, or send messages.
 
 ---
 
@@ -375,12 +390,19 @@ Sample outputs and sample CSV records:
 - [Sample Product Score CSV](examples/sample-product-score.csv)
 - [Sample Source Log CSV](examples/sample-source-log.csv)
 
+Lightweight Python examples:
+
+- [Python Examples README](examples/python/README.md)
+- [Daily Report Generator](examples/python/daily_report_generator.py)
+- [Product Idea Scoring Script](examples/python/score_product_idea.py)
+
 Important:
 
 ```text
 The examples use fictional sample data.
 They are for workflow testing and format demonstration only.
 They do not validate real market demand, sales potential, or profit.
+The Python scripts do not scrape websites, call external APIs, or automate outreach.
 ```
 
 ---
@@ -533,7 +555,11 @@ examples/
 ├── sample-daily-report-en.md
 ├── sample-daily-report-cn.md
 ├── sample-product-score.csv
-└── sample-source-log.csv
+├── sample-source-log.csv
+└── python/
+    ├── README.md
+    ├── daily_report_generator.py
+    └── score_product_idea.py
 ```
 
 ```text
@@ -542,12 +568,6 @@ SECURITY.md
 ```
 
 Planned next additions:
-
-```text
-examples/python/
-├── daily_report_generator.py
-└── score_product_idea.py
-```
 
 ```text
 .github/
