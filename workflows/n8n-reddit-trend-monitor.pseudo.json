@@ -1,0 +1,511 @@
+{
+  "name": "TrendPilot AI - Public Community Trend Monitor Pseudo Workflow",
+  "type": "pseudo-workflow",
+  "version": "0.1.0",
+  "status": "planning-template",
+  "description": "A license-safe pseudo workflow for monitoring public community discussions, extracting repeated pain points, summarizing buyer language, and generating product opportunity notes.",
+  "important_notice": [
+    "This is not a real n8n export file.",
+    "This file is a pseudo workflow design for planning and educational purposes.",
+    "It should not be imported directly into n8n.",
+    "TrendPilot AI does not copy or redistribute third-party workflow exports.",
+    "This workflow should only use public community pages and legally accessible information."
+  ],
+  "safe_use_principles": [
+    "Use public community discussions only.",
+    "Do not collect private user data.",
+    "Do not scrape private groups, private messages, or login-protected content.",
+    "Do not collect usernames, emails, phone numbers, addresses, or personal profiles.",
+    "Summarize patterns instead of copying user comments.",
+    "Do not spam communities.",
+    "Do not post automated comments.",
+    "Do not use communities for unsolicited promotion.",
+    "Respect community rules and platform terms.",
+    "Use human review before publishing or monetizing insights."
+  ],
+  "recommended_stack": {
+    "scheduler": "n8n or cron",
+    "public_data_collection": "RSS feeds, public APIs, search APIs, Firecrawl, or manual source lists",
+    "ai_analysis": "Dify, OpenAI-compatible API, local LLM, or other LLM workflow",
+    "data_storage": "Google Sheets, Notion, Airtable, CSV, or database",
+    "report_format": "Markdown, Google Sheets, Notion, Telegram digest, email, or PDF",
+    "human_review": "Manual review step before publishing or monetization"
+  },
+  "workflow_summary": {
+    "goal": "Monitor public community discussions for repeated consumer problems, product complaints, buying questions, and niche language.",
+    "input": "Public community source list and public discussion signals.",
+    "output": "Pain point summaries, buyer language notes, product opportunity ideas, content angles, and risk notes.",
+    "recommended_frequency": "Daily or weekly",
+    "human_review_required": true
+  },
+  "pseudo_nodes": [
+    {
+      "id": "node_001",
+      "name": "Schedule Trigger",
+      "type": "trigger",
+      "purpose": "Start the public community trend monitoring workflow on a fixed schedule.",
+      "example_configuration": {
+        "frequency": "daily_or_weekly",
+        "time": "10:00",
+        "timezone": "user_defined"
+      },
+      "output": {
+        "run_date": "{{current_date}}",
+        "workflow_run_id": "{{generated_id}}"
+      },
+      "risk_notes": [
+        "Avoid excessive automated collection.",
+        "Respect platform rules and rate limits."
+      ]
+    },
+    {
+      "id": "node_002",
+      "name": "Load Public Community Source List",
+      "type": "data_input",
+      "purpose": "Load a curated list of public communities, topics, or discussion pages to review.",
+      "example_sources": [
+        "public Reddit subreddit page",
+        "public forum discussion page",
+        "public Quora question page",
+        "public product community page",
+        "public hobby forum page",
+        "public review discussion page"
+      ],
+      "required_fields": [
+        "source_id",
+        "source_type",
+        "source_name",
+        "source_url",
+        "region",
+        "category",
+        "topic",
+        "keyword",
+        "risk_level"
+      ],
+      "risk_notes": [
+        "Do not include private groups.",
+        "Do not include login-protected discussions.",
+        "Do not include private user profiles.",
+        "Do not include contact databases."
+      ]
+    },
+    {
+      "id": "node_003",
+      "name": "Community Source Safety Filter",
+      "type": "validation",
+      "purpose": "Filter out community sources that are not safe for automated review.",
+      "checks": [
+        "Is the discussion public?",
+        "Does it require login?",
+        "Does it contain private personal data?",
+        "Does it require bypassing restrictions?",
+        "Is automated access allowed or reasonable?",
+        "Can the content be summarized instead of copied?",
+        "Is the source relevant to product research?"
+      ],
+      "routing": {
+        "safe_sources": "node_004",
+        "unsafe_sources": "node_003_rejected_log",
+        "needs_review": "node_003_needs_review_log"
+      },
+      "rejected_log_fields": [
+        "source_id",
+        "source_url",
+        "rejection_reason",
+        "review_status"
+      ],
+      "risk_notes": [
+        "If a source looks private or sensitive, reject it.",
+        "If the source is unclear, mark it as Needs Review."
+      ]
+    },
+    {
+      "id": "node_004",
+      "name": "Collect Public Discussion Signals",
+      "type": "public_data_collection",
+      "purpose": "Collect visible discussion signals from approved public community pages.",
+      "possible_tools": [
+        "RSS reader",
+        "public API",
+        "search API",
+        "Firecrawl",
+        "manual source extraction",
+        "other compliant public data tool"
+      ],
+      "recommended_extracted_fields": [
+        "source_url",
+        "discussion_title",
+        "source_type",
+        "source_name",
+        "region",
+        "category",
+        "topic",
+        "keyword",
+        "visible_questions",
+        "visible_pain_points",
+        "visible_product_mentions",
+        "visible_complaints",
+        "visible_desired_features",
+        "raw_summary",
+        "collection_date"
+      ],
+      "risk_notes": [
+        "Do not collect usernames.",
+        "Do not collect private user identities.",
+        "Do not copy full comments into reports.",
+        "Do not scrape private messages.",
+        "Do not use collected discussions for spam outreach."
+      ]
+    },
+    {
+      "id": "node_005",
+      "name": "Clean and Normalize Discussion Data",
+      "type": "data_processing",
+      "purpose": "Convert collected public discussion signals into a consistent internal format.",
+      "normalization_steps": [
+        "Remove irrelevant navigation text.",
+        "Remove duplicate discussion records.",
+        "Normalize category and topic.",
+        "Summarize visible questions in original words.",
+        "Summarize repeated pain points.",
+        "Summarize buyer language patterns.",
+        "Keep source URL.",
+        "Add collection date.",
+        "Add risk note if needed."
+      ],
+      "output_schema": {
+        "record_id": "string",
+        "source_type": "Community",
+        "source_name": "string",
+        "source_url": "string",
+        "collection_date": "YYYY-MM-DD",
+        "region": "string",
+        "category": "string",
+        "topic": "string",
+        "keyword": "string",
+        "discussion_signal": "string",
+        "pain_point_summary": "string",
+        "buyer_language_summary": "string",
+        "product_mentions": "string",
+        "risk_note": "string"
+      },
+      "risk_notes": [
+        "Use summaries, not long quotes.",
+        "Avoid personal identifiers.",
+        "Keep source links for traceability."
+      ]
+    },
+    {
+      "id": "node_006",
+      "name": "AI Pain Point Extraction",
+      "type": "ai_analysis",
+      "purpose": "Analyze public discussion signals and extract repeated consumer problems, questions, and product opportunity notes.",
+      "recommended_prompt_file": "prompts/review-pain-point-prompt.md",
+      "input_fields": [
+        "source_type",
+        "source_name",
+        "source_url",
+        "region",
+        "category",
+        "topic",
+        "keyword",
+        "discussion_signal",
+        "pain_point_summary",
+        "buyer_language_summary",
+        "product_mentions",
+        "risk_note"
+      ],
+      "output_fields": [
+        "main_pain_points",
+        "repeated_questions",
+        "desired_features",
+        "usage_scenarios",
+        "buyer_objections",
+        "product_improvement_opportunities",
+        "premium_version_ideas",
+        "bundle_opportunities",
+        "content_angle_notes",
+        "uncertainty_notes",
+        "confidence_level"
+      ],
+      "ai_rules": [
+        "Use only provided public discussion signals.",
+        "Do not invent user opinions.",
+        "Do not copy full comments.",
+        "Do not include usernames or private information.",
+        "Summarize patterns in original words.",
+        "Mark weak evidence as Low confidence."
+      ]
+    },
+    {
+      "id": "node_007",
+      "name": "Generate Product Opportunity Notes",
+      "type": "ai_opportunity_generation",
+      "purpose": "Turn repeated community problems into possible product or content opportunities.",
+      "recommended_prompt_file": "prompts/trend-analysis-prompt.md",
+      "input_fields": [
+        "main_pain_points",
+        "repeated_questions",
+        "desired_features",
+        "usage_scenarios",
+        "buyer_objections",
+        "product_improvement_opportunities",
+        "content_angle_notes",
+        "confidence_level"
+      ],
+      "output_fields": [
+        "product_idea",
+        "category",
+        "target_audience",
+        "consumer_pain_point",
+        "buyer_motivation",
+        "emotional_trigger",
+        "suggested_keywords",
+        "content_angle",
+        "marketplace_research_angle",
+        "source_evidence_summary",
+        "uncertainty",
+        "confidence",
+        "suggested_next_action"
+      ],
+      "risk_notes": [
+        "Community discussion signals are not proof of demand.",
+        "Product ideas need marketplace, supplier, and compliance validation.",
+        "Avoid overstating weak signals."
+      ]
+    },
+    {
+      "id": "node_008",
+      "name": "Risk Check",
+      "type": "ai_risk_review",
+      "purpose": "Review community-derived product ideas for compliance, privacy, claim, IP, platform, and product safety risks.",
+      "recommended_prompt_file": "prompts/risk-check-prompt.md",
+      "risk_categories": [
+        "Privacy or personal data risk",
+        "Unsupported claim risk",
+        "Platform policy risk",
+        "Product safety risk",
+        "Compliance or certification risk",
+        "Trademark or IP risk",
+        "Health or wellness claim risk",
+        "Baby or child safety risk",
+        "Shipping or fulfillment risk",
+        "Source quality risk"
+      ],
+      "output_fields": [
+        "overall_risk_level",
+        "risk_summary",
+        "risk_checklist",
+        "claims_to_remove_or_rewrite",
+        "safer_wording_suggestions",
+        "human_review_requirements",
+        "recommended_decision"
+      ],
+      "routing": {
+        "low_risk": "node_009",
+        "medium_risk": "node_009",
+        "high_risk": "node_008_needs_review_log",
+        "avoid": "node_008_rejected_log"
+      }
+    },
+    {
+      "id": "node_009",
+      "name": "Create Community Insight Record",
+      "type": "data_mapping",
+      "purpose": "Merge source data, AI pain point analysis, opportunity notes, and risk review into one structured record.",
+      "output_schema": {
+        "record_id": "string",
+        "source_type": "Community",
+        "source_name": "string",
+        "source_url": "string",
+        "collection_date": "YYYY-MM-DD",
+        "region": "string",
+        "category": "string",
+        "topic": "string",
+        "keyword": "string",
+        "product_name": "string",
+        "trend_signal": "string",
+        "evidence_summary": "string",
+        "target_audience": "string",
+        "pain_point": "string",
+        "buyer_language": "string",
+        "content_angle": "string",
+        "risk_note": "string",
+        "confidence": "Low | Medium | High",
+        "next_action": "string",
+        "review_status": "Draft | Needs Review | Approved | Rejected | Watchlist",
+        "reviewer_note": "string"
+      },
+      "default_review_status": "Draft"
+    },
+    {
+      "id": "node_010",
+      "name": "Save to Source Log",
+      "type": "storage",
+      "purpose": "Save community insight records to a structured reviewable log.",
+      "possible_tools": [
+        "Google Sheets",
+        "Notion",
+        "Airtable",
+        "CSV file",
+        "database"
+      ],
+      "recommended_template": "templates/source-log-template.csv",
+      "risk_notes": [
+        "Do not store private personal data.",
+        "Do not store usernames unless absolutely necessary for citation.",
+        "Do not store scraped personal contact data.",
+        "Manage access permissions carefully."
+      ]
+    },
+    {
+      "id": "node_011",
+      "name": "Generate Community Insight Summary",
+      "type": "report_generation",
+      "purpose": "Create a short summary of community-derived trends and pain points for human review.",
+      "report_sections": [
+        "Main Discussion Themes",
+        "Repeated Consumer Pain Points",
+        "Repeated Buyer Questions",
+        "Product Improvement Opportunities",
+        "Content Angle Ideas",
+        "Watchlist Items",
+        "Risk Notes",
+        "Suggested Next Actions"
+      ],
+      "output_formats": [
+        "Markdown",
+        "Google Sheets",
+        "Notion",
+        "Telegram digest",
+        "Email draft"
+      ],
+      "risk_notes": [
+        "Do not publish without human review.",
+        "Do not copy long user comments.",
+        "Do not include personal data."
+      ]
+    },
+    {
+      "id": "node_012",
+      "name": "Human Review Gate",
+      "type": "manual_review",
+      "purpose": "Require human review before publishing, selling, or sending community-derived insights.",
+      "review_checklist": [
+        "Sources are public.",
+        "Source links are included.",
+        "Claims are supported by evidence.",
+        "No private personal data is included.",
+        "No usernames or personal identifiers are included unless necessary and appropriate.",
+        "No long user comments are copied.",
+        "No community rules are violated.",
+        "No product success is guaranteed.",
+        "Confidence levels are included.",
+        "Risk notes are included.",
+        "Human reviewer has checked the final summary."
+      ],
+      "routing": {
+        "approved": "node_013",
+        "needs_revision": "node_011",
+        "rejected": "node_012_rejected_archive"
+      }
+    },
+    {
+      "id": "node_013",
+      "name": "Send Internal Digest",
+      "type": "delivery",
+      "purpose": "Send approved community insight summaries to an internal team or opt-in channel.",
+      "possible_channels": [
+        "Telegram",
+        "Email",
+        "Slack",
+        "Discord",
+        "Notion",
+        "Internal dashboard"
+      ],
+      "safe_delivery_rules": [
+        "Send only to opt-in users or internal teams.",
+        "Do not send unsolicited mass messages.",
+        "Do not use scraped contact lists.",
+        "Include disclaimer.",
+        "Keep source links available."
+      ]
+    },
+    {
+      "id": "node_014",
+      "name": "Archive Community Insights",
+      "type": "archive",
+      "purpose": "Archive source records, insight summaries, and review status.",
+      "archive_fields": [
+        "workflow_run_id",
+        "report_date",
+        "region",
+        "category",
+        "source_count",
+        "approved_count",
+        "watchlist_count",
+        "rejected_count",
+        "summary_url",
+        "reviewer",
+        "review_notes"
+      ],
+      "possible_tools": [
+        "Notion",
+        "Google Drive",
+        "GitHub private repository",
+        "Airtable",
+        "database",
+        "local folder"
+      ],
+      "risk_notes": [
+        "Do not archive private personal data.",
+        "Do not publish private internal notes accidentally.",
+        "Check sharing permissions."
+      ]
+    }
+  ],
+  "recommended_data_record": {
+    "record_id": "COM-001",
+    "source_type": "Community",
+    "source_name": "Example Public Community",
+    "source_url": "https://example.com/public-discussion",
+    "collection_date": "2026-06-07",
+    "region": "United States",
+    "category": "Travel Accessories",
+    "topic": "Jewelry packing for travel",
+    "keyword": "jewelry travel organizer",
+    "product_name": "Jewelry Travel Organizer",
+    "trend_signal": "Public discussions mention frustration with jewelry getting tangled or lost during trips.",
+    "evidence_summary": "Visible public discussion patterns suggest travelers want small, organized ways to store rings, earrings, and necklaces.",
+    "target_audience": "Women travelers; jewelry owners; gift buyers",
+    "pain_point": "Jewelry can get tangled, scratched, or misplaced while traveling.",
+    "buyer_language": "How do I pack jewelry for travel without tangling necklaces?",
+    "content_angle": "Travel packing routine showing messy jewelry versus organized compact case.",
+    "risk_note": "Avoid copying user comments directly. Avoid collecting usernames or personal details.",
+    "confidence": "Medium",
+    "next_action": "Check marketplace price range, public review complaints, and supplier options.",
+    "review_status": "Draft",
+    "reviewer_note": ""
+  },
+  "human_review_required_before": [
+    "Publishing community-derived insights",
+    "Selling a paid report",
+    "Creating a newsletter from community signals",
+    "Making sourcing decisions",
+    "Using buyer language in public marketing",
+    "Sharing source summaries externally"
+  ],
+  "what_this_workflow_should_not_do": [
+    "Scrape private communities",
+    "Collect usernames or personal profiles",
+    "Collect emails or phone numbers",
+    "Send automated messages",
+    "Post automated comments",
+    "Spam communities",
+    "Copy long user comments",
+    "Build user databases",
+    "Bypass platform restrictions",
+    "Claim community discussion equals proven demand"
+  ],
+  "disclaimer": "This pseudo workflow is based on public community research concepts and AI-assisted analysis. It is for educational and planning purposes only. It does not guarantee product demand, sales, profit, or business success. Users should verify all sources, respect community rules, review platform policies, and conduct their own due diligence before making business decisions."
+}
