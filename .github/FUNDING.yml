@@ -2,9 +2,6 @@
 # Documentation:
 # https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/displaying-a-sponsor-button-in-your-repository
 
-# If GitHub Sponsors is enabled for this account, this will show a Sponsor button.
 github: [lamguo]
-
-# Optional: add external support links here when available.
-# custom:
-#   - "https://example.com/support"
+custom:
+  - "https://www.paypal.me/lamguo"
