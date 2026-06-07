@@ -18,6 +18,7 @@ They can be used for:
 - Public data collection planning
 - AI-assisted product opportunity analysis
 - Product scoring
+- Risk level classification
 - Report generation
 - Telegram or email digest delivery
 - Google Sheets research logging
@@ -45,13 +46,13 @@ Before using any workflow in production, users must adapt it to their own tools,
 
 ## Workflow Files
 
-Planned workflow files:
+Current workflow files:
 
 ```text
 workflows/
 ├── README.md
 ├── n8n-daily-trend-intelligence.pseudo.json
-├── n8n-reddit-trend-monitor.pseudo.json
+├── n8n-community-trend-monitor.pseudo.json
 ├── n8n-google-sheets-output.pseudo.json
 └── n8n-telegram-digest.pseudo.json
 ```
@@ -68,7 +69,7 @@ n8n-daily-trend-intelligence.pseudo.json
 
 Purpose:
 
-Collect public trend signals, summarize them with AI, score product opportunities, and generate a daily report.
+Collect public trend signals, summarize them with AI, score product opportunities, classify risk levels, and generate a daily report.
 
 High-level flow:
 
@@ -85,6 +86,8 @@ AI Trend Analysis
     ↓
 Product Opportunity Scoring
     ↓
+Risk Check
+    ↓
 Human Review Status
     ↓
 Save to Google Sheets
@@ -94,17 +97,26 @@ Generate Daily Digest
 
 ---
 
-## Workflow 2: Reddit / Community Trend Monitor
+## Workflow 2: Public Community Trend Monitor
 
 File:
 
 ```text
-n8n-reddit-trend-monitor.pseudo.json
+n8n-community-trend-monitor.pseudo.json
 ```
 
 Purpose:
 
 Monitor public community discussions for product problems, repeated complaints, buyer language, and product opportunity signals.
+
+This workflow can be used for public sources such as:
+
+- Public Reddit discussions
+- Public Quora questions
+- Public forums
+- Public hobby communities
+- Public product discussion pages
+- Public community threads
 
 High-level flow:
 
@@ -112,6 +124,8 @@ High-level flow:
 Schedule Trigger
     ↓
 Load Public Community Topics
+    ↓
+Source Safety Filter
     ↓
 Collect Public Discussion Signals
     ↓
@@ -121,12 +135,16 @@ Analyze Repeated Questions
     ↓
 Generate Product Opportunity Notes
     ↓
+Risk Check
+    ↓
 Save to Source Log
 ```
 
 Important:
 
 This workflow should only use public community pages and should not collect private user data.
+
+It should not be used for spam, automated comments, private message scraping, or personal contact collection.
 
 ---
 
@@ -140,22 +158,34 @@ n8n-google-sheets-output.pseudo.json
 
 Purpose:
 
-Save collected trend signals, product scores, risk notes, and review status into a structured Google Sheets table.
+Save collected trend signals, product scores, risk notes, risk levels, confidence levels, and review status into a structured Google Sheets table.
 
 High-level flow:
 
 ```text
 Receive Trend Signal
     ↓
-Format Record
-    ↓
 Validate Required Fields
     ↓
-Add Risk Note
+Private Data Filter
     ↓
-Add Review Status
+Normalize Record Fields
+    ↓
+Generate Record ID
+    ↓
+Map to Source Log Columns
+    ↓
+Duplicate Check
     ↓
 Append Row to Google Sheets
+    ↓
+Add Review Status Logic
+```
+
+Related template:
+
+```text
+templates/source-log-template.csv
 ```
 
 ---
@@ -177,11 +207,15 @@ High-level flow:
 ```text
 Load Approved Trend Records
     ↓
+Filter by Review Status, Confidence, and Risk Level
+    ↓
 Select Top Opportunities
     ↓
 Format Telegram Digest
     ↓
-Add Disclaimer
+Add Risk Notes and Disclaimer
+    ↓
+Human Approval
     ↓
 Send to Telegram
 ```
@@ -189,6 +223,74 @@ Send to Telegram
 Important:
 
 This workflow should not be used for spam, mass unsolicited messaging, or misleading income claims.
+
+---
+
+## Standard TrendPilot AI Record Fields
+
+TrendPilot AI workflows should use one consistent record structure.
+
+```text
+record_id
+source_type
+source_name
+source_url
+collection_date
+publication_date
+region
+category
+keyword
+product_name
+trend_signal
+evidence_summary
+target_audience
+pain_point
+content_angle
+price_signal
+competition_signal
+risk_note
+risk_level
+confidence
+opportunity_score
+next_action
+review_status
+reviewer_note
+```
+
+Important:
+
+```text
+risk_note = human-readable explanation of the risk
+risk_level = standardized risk category
+```
+
+Recommended risk level values:
+
+```text
+Low
+Medium
+High
+Avoid
+Unknown
+```
+
+Recommended confidence values:
+
+```text
+Low
+Medium
+High
+```
+
+Recommended review status values:
+
+```text
+Draft
+Needs Review
+Approved
+Rejected
+Watchlist
+```
 
 ---
 
@@ -204,7 +306,7 @@ All TrendPilot AI workflows should follow these rules:
 6. Do not copy competitor images, creator videos, or protected designs.
 7. Do not generate guaranteed income or guaranteed sales claims.
 8. Add source links wherever possible.
-9. Add confidence levels and risk notes.
+9. Add confidence levels, risk notes, and risk levels.
 10. Use human review before publishing or monetizing reports.
 
 ---
@@ -260,6 +362,7 @@ Each workflow should try to produce structured records with these fields:
 | source_name | Platform, publisher, or website |
 | source_url | Public source URL |
 | collection_date | Date collected |
+| publication_date | Date published, if available |
 | region | Target market |
 | category | Product category |
 | keyword | Main keyword |
@@ -269,12 +372,48 @@ Each workflow should try to produce structured records with these fields:
 | target_audience | Likely buyer group |
 | pain_point | Consumer problem |
 | content_angle | Suggested content angle |
+| price_signal | Visible public price signal |
 | competition_signal | Low, medium, or high |
-| risk_note | Main risk |
-| confidence | Low, medium, or high |
+| risk_note | Human-readable risk explanation |
+| risk_level | Low, Medium, High, Avoid, or Unknown |
+| confidence | Low, Medium, or High |
 | opportunity_score | Internal score |
 | next_action | Suggested next step |
 | review_status | Draft, Needs Review, Approved, Rejected, or Watchlist |
+| reviewer_note | Human reviewer note |
+
+---
+
+## Risk Level Rules
+
+Suggested rules:
+
+| Risk Level | Suggested Handling |
+|---|---|
+| Low | Can move forward after review |
+| Medium | Needs careful review before use |
+| High | Do not use as a top opportunity without deeper review |
+| Avoid | Exclude or reject |
+| Unknown | Mark as Needs Review |
+
+For public or paid reports, recommended filter:
+
+```text
+review_status = Approved
+confidence = Medium or High
+risk_level = Low or Medium
+```
+
+Avoid using these in public or paid reports:
+
+```text
+review_status = Draft
+review_status = Needs Review
+review_status = Rejected
+risk_level = High
+risk_level = Avoid
+risk_level = Unknown
+```
 
 ---
 
@@ -292,6 +431,7 @@ Before any workflow output is published, sold, or sent to subscribers, confirm:
 - [ ] No product success is guaranteed
 - [ ] Confidence levels are included
 - [ ] Risk notes are included
+- [ ] Risk levels are included
 - [ ] Human reviewer has approved the output
 
 ---
