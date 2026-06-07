@@ -17,7 +17,7 @@ It does not guarantee product demand, sales, profit, or business success.
 **Target Region:**  
 **Report Date:**  
 **Prepared By:**  
-**Review Status:** Draft / Reviewed / Approved  
+**Review Status:** Draft / Needs Review / Approved / Rejected / Watchlist  
 
 ---
 
@@ -174,7 +174,7 @@ Summarize public review patterns, common likes, complaints, and feature requests
 **Suggested Keywords:**  
 **Content Angle:**  
 **Confidence Level:** Low / Medium / High  
-**Risk Level:** Low / Medium / High  
+**Risk Level:** Low / Medium / High / Avoid / Unknown  
 
 ### Opportunity Score
 
@@ -210,7 +210,7 @@ Add reviewer notes here.
 **Suggested Keywords:**  
 **Content Angle:**  
 **Confidence Level:** Low / Medium / High  
-**Risk Level:** Low / Medium / High  
+**Risk Level:** Low / Medium / High / Avoid / Unknown  
 
 ### Opportunity Score
 
@@ -246,7 +246,7 @@ Add reviewer notes here.
 **Suggested Keywords:**  
 **Content Angle:**  
 **Confidence Level:** Low / Medium / High  
-**Risk Level:** Low / Medium / High  
+**Risk Level:** Low / Medium / High / Avoid / Unknown  
 
 ### Opportunity Score
 
@@ -585,7 +585,7 @@ What should be checked before selling?
 Choose one:
 
 ```text
-Low / Medium / High
+Low / Medium / High / Avoid / Unknown
 ```
 
 ### Risk Checklist
