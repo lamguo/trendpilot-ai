@@ -1,9 +1,9 @@
 {
   "name": "TrendPilot AI - Daily Trend Intelligence Pseudo Workflow",
   "type": "pseudo-workflow",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "status": "planning-template",
-  "description": "A license-safe pseudo workflow for building a daily AI-powered trend intelligence pipeline using public data sources, AI analysis, product opportunity scoring, human review, and report delivery.",
+  "description": "A license-safe pseudo workflow for building a daily AI-powered trend intelligence pipeline using public data sources, AI analysis, product opportunity scoring, risk level classification, human review, and report delivery.",
   "important_notice": [
     "This is not a real n8n export file.",
     "This file is a pseudo workflow design created for planning and educational purposes.",
@@ -19,7 +19,7 @@
     "Do not copy long copyrighted content into reports.",
     "Do not copy competitor images, creator videos, or protected designs.",
     "Do not claim guaranteed demand, sales, profit, or business success.",
-    "Add source links, confidence levels, and risk notes.",
+    "Add source links, confidence levels, risk notes, risk levels, and review status.",
     "Use human review before publishing, selling, or sending reports."
   ],
   "recommended_stack": {
@@ -32,12 +32,52 @@
     "human_review": "Manual review step before publishing or monetization"
   },
   "workflow_summary": {
-    "goal": "Collect public trend signals, summarize them with AI, score product opportunities, save structured records, and generate a daily trend report.",
+    "goal": "Collect public trend signals, summarize them with AI, score product opportunities, classify risk level, save structured records, and generate a daily trend report.",
     "input": "Public trend sources and source list records.",
-    "output": "Structured trend records, opportunity scores, risk notes, review status, and a daily report draft.",
+    "output": "Structured trend records, opportunity scores, confidence levels, risk notes, risk levels, review status, and a daily report draft.",
     "recommended_frequency": "Daily",
     "human_review_required": true
   },
+  "standard_fields": [
+    "record_id",
+    "source_type",
+    "source_name",
+    "source_url",
+    "collection_date",
+    "publication_date",
+    "region",
+    "category",
+    "keyword",
+    "product_name",
+    "trend_signal",
+    "evidence_summary",
+    "target_audience",
+    "pain_point",
+    "content_angle",
+    "price_signal",
+    "competition_signal",
+    "risk_note",
+    "risk_level",
+    "confidence",
+    "opportunity_score",
+    "next_action",
+    "review_status",
+    "reviewer_note"
+  ],
+  "risk_level_values": [
+    "Low",
+    "Medium",
+    "High",
+    "Avoid",
+    "Unknown"
+  ],
+  "review_status_values": [
+    "Draft",
+    "Needs Review",
+    "Approved",
+    "Rejected",
+    "Watchlist"
+  ],
   "pseudo_nodes": [
     {
       "id": "node_001",
@@ -104,11 +144,13 @@
       ],
       "routing": {
         "safe_sources": "node_004",
-        "unsafe_sources": "node_003_rejected_log"
+        "unsafe_sources": "node_003_rejected_log",
+        "needs_review": "node_003_needs_review_log"
       },
       "rejected_log_fields": [
         "source_id",
         "source_url",
+        "risk_level",
         "rejection_reason",
         "review_status"
       ],
@@ -143,7 +185,9 @@
         "visible_review_signal",
         "visible_social_signal",
         "raw_summary",
-        "collection_date"
+        "collection_date",
+        "risk_note",
+        "risk_level"
       ],
       "risk_notes": [
         "Do not copy full pages into reports.",
@@ -166,7 +210,8 @@
         "Shorten raw notes into source-based summaries.",
         "Keep source URL.",
         "Add collection date.",
-        "Add risk note if needed."
+        "Add risk note if needed.",
+        "Add or normalize risk level."
       ],
       "output_schema": {
         "record_id": "string",
@@ -179,12 +224,14 @@
         "keyword": "string",
         "raw_signal": "string",
         "evidence_note": "string",
-        "risk_note": "string"
+        "risk_note": "string",
+        "risk_level": "Low | Medium | High | Avoid | Unknown"
       },
       "risk_notes": [
         "Summaries should be original.",
         "Avoid copying long copyrighted text.",
-        "Keep source links for traceability."
+        "Keep source links for traceability.",
+        "If risk level is unclear, set it to Unknown and mark output as Needs Review."
       ]
     },
     {
@@ -202,7 +249,8 @@
         "keyword",
         "raw_signal",
         "evidence_note",
-        "risk_note"
+        "risk_note",
+        "risk_level"
       ],
       "output_fields": [
         "product_idea",
@@ -217,6 +265,8 @@
         "source_evidence_summary",
         "uncertainty",
         "confidence",
+        "risk_note",
+        "risk_level",
         "suggested_next_action"
       ],
       "ai_rules": [
@@ -225,7 +275,8 @@
         "Do not claim guaranteed demand.",
         "Do not include private personal data.",
         "Do not copy long source text.",
-        "Add uncertainty when evidence is weak."
+        "Add uncertainty when evidence is weak.",
+        "Return risk_note and risk_level separately."
       ]
     },
     {
@@ -263,12 +314,15 @@
         "confidence",
         "main_strengths",
         "main_risks",
+        "risk_note",
+        "risk_level",
         "validation_steps"
       ],
       "risk_notes": [
         "A high score does not guarantee sales.",
         "Scores are research signals only.",
-        "Human review is recommended before action."
+        "Human review is recommended before action.",
+        "Compliance Risk score and risk_level should both be recorded."
       ]
     },
     {
@@ -295,7 +349,9 @@
       ],
       "output_fields": [
         "overall_risk_level",
+        "risk_level",
         "risk_summary",
+        "risk_note",
         "risk_checklist",
         "claims_to_remove_or_rewrite",
         "safer_wording_suggestions",
@@ -307,7 +363,12 @@
         "medium_risk": "node_009",
         "high_risk": "node_008_needs_review_log",
         "avoid": "node_008_rejected_log"
-      }
+      },
+      "risk_notes": [
+        "Risk note explains the risk.",
+        "Risk level classifies the severity.",
+        "High and Avoid risk levels should not be automatically approved."
+      ]
     },
     {
       "id": "node_009",
@@ -320,6 +381,7 @@
         "source_name": "string",
         "source_url": "string",
         "collection_date": "YYYY-MM-DD",
+        "publication_date": "YYYY-MM-DD or empty",
         "region": "string",
         "category": "string",
         "keyword": "string",
@@ -332,13 +394,15 @@
         "price_signal": "string",
         "competition_signal": "string",
         "risk_note": "string",
+        "risk_level": "Low | Medium | High | Avoid | Unknown",
         "confidence": "Low | Medium | High",
         "opportunity_score": "number",
         "next_action": "string",
         "review_status": "Draft | Needs Review | Approved | Rejected | Watchlist",
         "reviewer_note": "string"
       },
-      "default_review_status": "Draft"
+      "default_review_status": "Draft",
+      "default_risk_level": "Unknown"
     },
     {
       "id": "node_010",
@@ -356,7 +420,8 @@
       "risk_notes": [
         "Do not store private personal data.",
         "Do not store API keys in public sheets.",
-        "Manage access permissions carefully."
+        "Manage access permissions carefully.",
+        "Use the standard source log fields, including risk_note and risk_level."
       ]
     },
     {
@@ -391,7 +456,8 @@
       "risk_notes": [
         "Report should remain Draft until human reviewed.",
         "Do not publish unsupported claims.",
-        "Do not remove disclaimers."
+        "Do not remove disclaimers.",
+        "Include both risk note and risk level where useful."
       ]
     },
     {
@@ -409,7 +475,9 @@
         "No product success is guaranteed.",
         "Confidence levels are included.",
         "Risk notes are included.",
+        "Risk levels are included.",
         "High-risk ideas are clearly marked.",
+        "Avoid-risk ideas are excluded or rejected.",
         "Human reviewer has checked the final report."
       ],
       "routing": {
@@ -427,7 +495,11 @@
       "input_filter": {
         "review_status": "Approved",
         "minimum_confidence": "Medium",
-        "exclude_risk_level": "Avoid"
+        "excluded_risk_level": [
+          "High",
+          "Avoid",
+          "Unknown"
+        ]
       },
       "output_fields": [
         "date",
@@ -442,7 +514,8 @@
       "risk_notes": [
         "Only send to opt-in channels or internal teams.",
         "Do not use for spam.",
-        "Keep disclaimer included."
+        "Keep disclaimer included.",
+        "Avoid sending High or Avoid risk level records in top opportunities."
       ]
     },
     {
@@ -481,6 +554,8 @@
         "approved_count",
         "watchlist_count",
         "rejected_count",
+        "high_risk_count",
+        "avoid_risk_count",
         "report_url",
         "reviewer",
         "review_notes"
@@ -519,6 +594,7 @@
     "price_signal": "$8-$35 visible public range",
     "competition_signal": "Medium",
     "risk_note": "Avoid copying creator content or competitor images. Verify material claims and zipper quality.",
+    "risk_level": "Low",
     "confidence": "Medium",
     "opportunity_score": 15,
     "next_action": "Check marketplace pricing, review complaints, and supplier customization options.",
