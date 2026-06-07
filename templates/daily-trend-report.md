@@ -14,7 +14,7 @@ This report should be based on public sources only.
 **Region / Market:**  
 **Main Category:**  
 **Prepared By:**  
-**Review Status:** Draft / Reviewed / Approved  
+**Review Status:** Draft / Needs Review / Approved / Rejected / Watchlist  
 **Disclaimer:** This report is for research and informational purposes only. It does not guarantee product demand, sales, profit, or business success.
 
 ---
@@ -60,7 +60,7 @@ Today’s strongest signals came from [source types], especially around [categor
 **Suggested Content Angle:**  
 **Source Evidence:**  
 **Confidence Level:** Low / Medium / High  
-**Risk Level:** Low / Medium / High  
+**Risk Level:** Low / Medium / High / Avoid / Unknown  
 **Suggested Next Action:**  
 
 #### Opportunity Score
@@ -99,7 +99,7 @@ Add short human review notes here.
 **Suggested Content Angle:**  
 **Source Evidence:**  
 **Confidence Level:** Low / Medium / High  
-**Risk Level:** Low / Medium / High  
+**Risk Level:** Low / Medium / High / Avoid / Unknown  
 **Suggested Next Action:**  
 
 #### Opportunity Score
@@ -138,7 +138,7 @@ Add short human review notes here.
 **Suggested Content Angle:**  
 **Source Evidence:**  
 **Confidence Level:** Low / Medium / High  
-**Risk Level:** Low / Medium / High  
+**Risk Level:** Low / Medium / High / Avoid / Unknown  
 **Suggested Next Action:**  
 
 #### Opportunity Score
