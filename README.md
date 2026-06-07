@@ -77,6 +77,9 @@ trendpilot-ai/
 ├── LICENSE
 ├── ATTRIBUTION.md
 ├── DISCLAIMER.md
+├── SECURITY.md
+├── .github/
+│   └── FUNDING.yml
 ├── docs/
 │   ├── architecture.md
 │   ├── data-sources.md
@@ -100,6 +103,10 @@ trendpilot-ai/
 │   ├── competitor-snapshot.md
 │   ├── source-log-template.csv
 │   └── telegram-digest-template.md
+├── schemas/
+│   ├── trend-signal.schema.json
+│   ├── product-score.schema.json
+│   └── report-record.schema.json
 ├── workflows/
 │   ├── README.md
 │   ├── n8n-daily-trend-intelligence.pseudo.json
@@ -148,11 +155,14 @@ Core prompts:
 - [Content Angle Prompt](prompts/content-angle-prompt.md)
 - [Risk Check Prompt](prompts/risk-check-prompt.md)
 
-### 4. Save structured records
+### 4. Save and validate structured records
 
 Use:
 
 - [Source Log CSV Template](templates/source-log-template.csv)
+- [Trend Signal Schema](schemas/trend-signal.schema.json)
+- [Product Score Schema](schemas/product-score.schema.json)
+- [Report Record Schema](schemas/report-record.schema.json)
 - [Google Sheets Integration Guide](integrations/google-sheets.md)
 
 ### 5. Generate reports
@@ -464,7 +474,7 @@ See:
 
 ## Roadmap
 
-Planned next additions:
+Core additions now included:
 
 ```text
 schemas/
@@ -472,6 +482,13 @@ schemas/
 ├── product-score.schema.json
 └── report-record.schema.json
 ```
+
+```text
+SECURITY.md
+.github/FUNDING.yml
+```
+
+Planned next additions:
 
 ```text
 examples/
@@ -489,14 +506,12 @@ examples/python/
 
 ```text
 .github/
-├── FUNDING.yml
 └── ISSUE_TEMPLATE/
 ```
 
 Other planned files:
 
 ```text
-SECURITY.md
 CONTRIBUTING.md
 CODE_OF_CONDUCT.md
 ```
