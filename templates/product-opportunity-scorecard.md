@@ -16,7 +16,7 @@ This scorecard does not guarantee sales, profit, or business success.
 **Target Audience:**  
 **Prepared By:**  
 **Date:**  
-**Review Status:** Draft / Reviewed / Approved  
+**Review Status:** Draft / Needs Review / Approved / Rejected / Watchlist  
 
 ---
 
@@ -471,7 +471,7 @@ Does it require batteries, liquid handling, or certification?
 Choose one:
 
 ```text
-Low / Medium / High
+Low / Medium / High / Avoid / Unknown
 ```
 
 ### Risk Types
