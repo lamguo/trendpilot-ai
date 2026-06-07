@@ -107,6 +107,11 @@ trendpilot-ai/
 │   ├── trend-signal.schema.json
 │   ├── product-score.schema.json
 │   └── report-record.schema.json
+├── examples/
+│   ├── sample-daily-report-en.md
+│   ├── sample-daily-report-cn.md
+│   ├── sample-product-score.csv
+│   └── sample-source-log.csv
 ├── workflows/
 │   ├── README.md
 │   ├── n8n-daily-trend-intelligence.pseudo.json
@@ -175,6 +180,17 @@ Use:
 - [Product Opportunity Scorecard](templates/product-opportunity-scorecard.md)
 - [Competitor Snapshot Template](templates/competitor-snapshot.md)
 - [Telegram Digest Template](templates/telegram-digest-template.md)
+
+### 6. Review sample outputs
+
+Use the examples to understand the expected output style and field structure:
+
+- [Sample Daily Report EN](examples/sample-daily-report-en.md)
+- [Sample Daily Report CN](examples/sample-daily-report-cn.md)
+- [Sample Product Score CSV](examples/sample-product-score.csv)
+- [Sample Source Log CSV](examples/sample-source-log.csv)
+
+The examples use fictional sample data for structure demonstration only.
 
 ---
 
@@ -340,6 +356,35 @@ Report and research templates:
 
 ---
 
+## Schemas
+
+Structured data schemas:
+
+- [Trend Signal Schema](schemas/trend-signal.schema.json)
+- [Product Score Schema](schemas/product-score.schema.json)
+- [Report Record Schema](schemas/report-record.schema.json)
+
+---
+
+## Examples
+
+Sample outputs and sample CSV records:
+
+- [Sample Daily Report EN](examples/sample-daily-report-en.md)
+- [Sample Daily Report CN](examples/sample-daily-report-cn.md)
+- [Sample Product Score CSV](examples/sample-product-score.csv)
+- [Sample Source Log CSV](examples/sample-source-log.csv)
+
+Important:
+
+```text
+The examples use fictional sample data.
+They are for workflow testing and format demonstration only.
+They do not validate real market demand, sales potential, or profit.
+```
+
+---
+
 ## Workflows
 
 Pseudo-workflow blueprints:
@@ -484,19 +529,19 @@ schemas/
 ```
 
 ```text
-SECURITY.md
-.github/FUNDING.yml
-```
-
-Planned next additions:
-
-```text
 examples/
 ├── sample-daily-report-en.md
 ├── sample-daily-report-cn.md
 ├── sample-product-score.csv
 └── sample-source-log.csv
 ```
+
+```text
+SECURITY.md
+.github/FUNDING.yml
+```
+
+Planned next additions:
 
 ```text
 examples/python/
