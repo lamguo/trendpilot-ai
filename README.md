@@ -706,3 +706,12 @@ Before using any external project, review that project's own license, documentat
 - [Sample Trend Signal JSON](examples/sample-trend-signal.json)
 - [Sample Report Record JSON](examples/sample-report-record.json)
 - [Sample Product Score Input JSON](examples/sample-product-score-input.json)
+
+## Support This Project
+
+If TrendPilot AI helps you save time or gives you value, you can support the project here:
+
+- ⭐ Star this repository
+- 💰 Support via PayPal: https://www.paypal.me/lamguo
+
+Thank you for supporting open-source development.
