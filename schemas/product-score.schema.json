@@ -1,1 +1,211 @@
-
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lamguo/trendpilot-ai/schemas/product-score.schema.json",
+  "title": "TrendPilot AI Product Opportunity Score",
+  "description": "A structured product opportunity scorecard using public research signals and the TrendPilot AI scoring formula. This schema does not represent financial advice or a guarantee of sales or profit.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "score_id",
+    "product_idea",
+    "target_region",
+    "target_audience",
+    "evidence_summary",
+    "scores",
+    "opportunity_score",
+    "score_interpretation",
+    "risk_note",
+    "risk_level",
+    "confidence",
+    "next_action",
+    "review_status"
+  ],
+  "properties": {
+    "score_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "product_idea": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "category": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 160
+    },
+    "target_region": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "target_audience": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1000
+    },
+    "evaluated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time",
+      "description": "ISO 8601 timestamp when the score was generated or reviewed."
+    },
+    "source_urls": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uri"
+      },
+      "uniqueItems": true,
+      "default": []
+    },
+    "evidence_summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4000
+    },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "demand_signal",
+        "social_visibility",
+        "price_potential",
+        "supplier_availability",
+        "differentiation_potential",
+        "competition_level",
+        "shipping_difficulty",
+        "compliance_risk"
+      ],
+      "properties": {
+        "demand_signal": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "social_visibility": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "price_potential": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "supplier_availability": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "differentiation_potential": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "competition_level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Negative factor: higher means more crowded."
+        },
+        "shipping_difficulty": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Negative factor: higher means harder to ship."
+        },
+        "compliance_risk": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Negative factor: higher means higher legal, platform, safety, certification, or policy risk."
+        }
+      }
+    },
+    "opportunity_score": {
+      "type": "number",
+      "minimum": -10,
+      "maximum": 22,
+      "description": "Demand + Social Visibility + Price Potential + Supplier Availability + Differentiation Potential - Competition Level - Shipping Difficulty - Compliance Risk."
+    },
+    "score_interpretation": {
+      "type": "string",
+      "enum": [
+        "Strong Candidate",
+        "Test Carefully",
+        "Watchlist",
+        "Avoid"
+      ]
+    },
+    "main_strengths": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      },
+      "default": []
+    },
+    "main_risks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 500
+      },
+      "default": []
+    },
+    "risk_note": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1500
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "Low",
+        "Medium",
+        "High",
+        "Avoid",
+        "Unknown"
+      ]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "Low",
+        "Medium",
+        "High"
+      ]
+    },
+    "next_action": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1500
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Needs Review",
+        "Approved",
+        "Rejected",
+        "Watchlist"
+      ]
+    },
+    "reviewer_note": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2000
+    }
+  }
+}

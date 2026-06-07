@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lamguo/trendpilot-ai/schemas/trend-signal.schema.json",
+  "title": "TrendPilot AI Trend Signal Record",
+  "description": "A structured record for a public trend signal collected for AI-assisted trend intelligence. Use only public, legally accessible sources and keep human review fields separate from AI-generated notes.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_id",
+    "source_type",
+    "source_name",
+    "source_url",
+    "collection_date",
+    "region",
+    "category",
+    "trend_signal",
+    "evidence_summary",
+    "risk_note",
+    "risk_level",
+    "confidence",
+    "next_action",
+    "review_status"
+  ],
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120,
+      "description": "Internal unique ID for this signal record."
+    },
+    "source_type": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80,
+      "description": "Example: marketplace, community, news, review site, public report, search trend, social media, supplier directory, or other public source type."
+    },
+    "source_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "source_url": {
+      "type": "string",
+      "format": "uri",
+      "minLength": 1
+    },
+    "collection_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when the signal was collected, in YYYY-MM-DD format."
+    },
+    "publication_date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date",
+      "description": "Original publication date when available; use null if unknown."
+    },
+    "region": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "category": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "keyword": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200
+    },
+    "product_name": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 200
+    },
+    "trend_signal": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1200,
+      "description": "The observed trend signal in original words, without claiming proven demand."
+    },
+    "evidence_summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 3000,
+      "description": "Short summary of the public evidence supporting the signal."
+    },
+    "target_audience": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 1000
+    },
+    "pain_point": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 1200
+    },
+    "content_angle": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 1200
+    },
+    "price_signal": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 1000
+    },
+    "competition_signal": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 1000
+    },
+    "risk_note": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1500,
+      "description": "Human-readable explanation of uncertainty, compliance risk, data quality risk, or market assumption."
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "Low",
+        "Medium",
+        "High",
+        "Avoid",
+        "Unknown"
+      ]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "Low",
+        "Medium",
+        "High"
+      ]
+    },
+    "opportunity_score": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": -10,
+      "description": "Optional score. The default product scoring formula ranges from -10 to 22 unless a workflow documents a different normalized scale."
+    },
+    "next_action": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1500
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Needs Review",
+        "Approved",
+        "Rejected",
+        "Watchlist"
+      ]
+    },
+    "reviewer_note": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2000
+    }
+  }
+}

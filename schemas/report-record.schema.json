@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/lamguo/trendpilot-ai/schemas/report-record.schema.json",
+  "title": "TrendPilot AI Report Record",
+  "description": "A structured report record for daily digests, weekly briefs, ecommerce market reports, product scorecards, competitor snapshots, and other human-reviewed trend intelligence outputs.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "report_id",
+    "report_type",
+    "report_date",
+    "title",
+    "executive_summary",
+    "records",
+    "risk_note",
+    "risk_level",
+    "confidence",
+    "next_action",
+    "review_status"
+  ],
+  "properties": {
+    "report_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "report_type": {
+      "type": "string",
+      "enum": [
+        "Daily Trend Report",
+        "Weekly Market Brief",
+        "E-commerce Market Report",
+        "Product Opportunity Scorecard",
+        "Competitor Snapshot",
+        "Telegram Digest",
+        "Other"
+      ]
+    },
+    "report_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "generated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240
+    },
+    "region": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 120
+    },
+    "category": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 160
+    },
+    "executive_summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 5000
+    },
+    "records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "record_id",
+          "source_url",
+          "summary"
+        ],
+        "properties": {
+          "record_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "source_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1200
+          }
+        }
+      }
+    },
+    "opportunities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "product_idea",
+          "trend_signal",
+          "risk_level",
+          "confidence"
+        ],
+        "properties": {
+          "product_idea": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 240
+          },
+          "category": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 160
+          },
+          "trend_signal": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1200
+          },
+          "opportunity_score": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": -10
+          },
+          "risk_note": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1500
+          },
+          "risk_level": {
+            "type": "string",
+            "enum": [
+              "Low",
+              "Medium",
+              "High",
+              "Avoid",
+              "Unknown"
+            ]
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "Low",
+              "Medium",
+              "High"
+            ]
+          },
+          "next_action": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1500
+          }
+        }
+      },
+      "default": []
+    },
+    "risk_note": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1500
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "Low",
+        "Medium",
+        "High",
+        "Avoid",
+        "Unknown"
+      ]
+    },
+    "confidence": {
+      "type": "string",
+      "enum": [
+        "Low",
+        "Medium",
+        "High"
+      ]
+    },
+    "next_action": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1500
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Needs Review",
+        "Approved",
+        "Rejected",
+        "Watchlist"
+      ]
+    },
+    "reviewer_note": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "maxLength": 2000
+    }
+  }
+}
