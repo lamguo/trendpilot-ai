@@ -78,7 +78,9 @@ Extract:
 10. Possible differentiation opportunities
 11. Marketplace saturation level
 12. IP, trademark, design, or content copying risks
-13. Suggested next research steps
+13. Risk note
+14. Risk level: Low, Medium, High, Avoid, or Unknown
+15. Suggested next research steps
 
 Rules:
 - Use only the provided public information.
@@ -91,6 +93,7 @@ Rules:
 - Summarize patterns instead of cloning competitors.
 - Add uncertainty when evidence is limited.
 - Include risk notes when a product looks trademark-sensitive, design-sensitive, regulated, or platform-sensitive.
+- Return risk_note and risk_level separately.
 ```
 
 ---
@@ -221,9 +224,13 @@ Reason:
 
 [Explain based on visible public signals.]
 
-## Risks and Warnings
+## Risk Note
 
 [Explain possible IP, trademark, platform, product safety, review, or shipping risks.]
+
+## Risk Level
+
+Low / Medium / High / Avoid / Unknown
 
 ## Suggested Next Research Steps
 
@@ -513,9 +520,13 @@ Reason:
 
 There appear to be many similar products, but differentiation may still be possible through design, quality, packaging, personalization, and content.
 
-## Risks and Warnings
+## Risk Note
 
 Avoid copying competitor photos, product descriptions, exact design details, or branding. Verify material claims before using terms like leather or waterproof.
+
+## Risk Level
+
+Medium
 
 ## Suggested Next Research Steps
 
