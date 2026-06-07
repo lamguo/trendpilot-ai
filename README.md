@@ -48,6 +48,12 @@ This project is for research, education, workflow planning, and responsible mark
 
 ---
 
+## Support
+
+If you find this project useful, consider [buying me a coffee](https://www.paypal.me/lamguo). ☕
+
+---
+
 ## Core Workflow
 
 ```text
