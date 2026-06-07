@@ -1,7 +1,7 @@
 {
   "name": "TrendPilot AI - Telegram Digest Pseudo Workflow",
   "type": "pseudo-workflow",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "status": "planning-template",
   "description": "A license-safe pseudo workflow for generating and sending short AI-assisted trend intelligence digests to Telegram or other opt-in delivery channels.",
   "important_notice": [
@@ -17,7 +17,7 @@
     "Do not use scraped email lists, phone lists, or private contact databases.",
     "Do not use Telegram delivery for spam, fake urgency, or misleading income claims.",
     "Use only reviewed or approved trend records for external delivery.",
-    "Include disclaimers in every digest.",
+    "Include risk notes, risk levels, confidence levels, and disclaimers in every digest.",
     "Keep source links available for important claims.",
     "Use human review before sending paid or public reports."
   ],
@@ -29,12 +29,52 @@
     "human_review": "Manual approval before public or paid delivery"
   },
   "workflow_summary": {
-    "goal": "Load reviewed trend records, select top opportunities, format a short digest, add risk notes and disclaimer, then send it to an approved Telegram channel or internal team.",
+    "goal": "Load reviewed trend records, select top opportunities, format a short digest, add risk notes, risk levels, and disclaimer, then send it to an approved Telegram channel or internal team.",
     "input": "Approved trend records from Google Sheets, Notion, Airtable, CSV, or database.",
     "output": "Telegram digest message or internal alert.",
     "recommended_frequency": "Daily or weekly",
     "human_review_required": true
   },
+  "standard_fields": [
+    "record_id",
+    "source_type",
+    "source_name",
+    "source_url",
+    "collection_date",
+    "publication_date",
+    "region",
+    "category",
+    "keyword",
+    "product_name",
+    "trend_signal",
+    "evidence_summary",
+    "target_audience",
+    "pain_point",
+    "content_angle",
+    "price_signal",
+    "competition_signal",
+    "risk_note",
+    "risk_level",
+    "confidence",
+    "opportunity_score",
+    "next_action",
+    "review_status",
+    "reviewer_note"
+  ],
+  "risk_level_values": [
+    "Low",
+    "Medium",
+    "High",
+    "Avoid",
+    "Unknown"
+  ],
+  "review_status_values": [
+    "Draft",
+    "Needs Review",
+    "Approved",
+    "Rejected",
+    "Watchlist"
+  ],
   "pseudo_nodes": [
     {
       "id": "node_001",
@@ -85,6 +125,7 @@
         "pain_point",
         "content_angle",
         "risk_note",
+        "risk_level",
         "confidence",
         "opportunity_score",
         "next_action",
@@ -92,7 +133,8 @@
       ],
       "risk_notes": [
         "Do not load records that contain private personal data.",
-        "Do not load rejected records for external delivery."
+        "Do not load rejected records for external delivery.",
+        "Records should include both risk_note and risk_level."
       ]
     },
     {
@@ -102,7 +144,9 @@
       "purpose": "Filter records so only safe and reviewable items are included in the digest.",
       "filter_rules": {
         "allowed_review_status": [
-          "Approved",
+          "Approved"
+        ],
+        "optional_watchlist_status": [
           "Watchlist"
         ],
         "minimum_confidence": [
@@ -110,21 +154,31 @@
           "High"
         ],
         "excluded_review_status": [
+          "Draft",
           "Rejected",
           "Needs Review"
         ],
         "excluded_risk_level": [
-          "Avoid"
+          "High",
+          "Avoid",
+          "Unknown"
+        ],
+        "allowed_risk_level_for_top_opportunities": [
+          "Low",
+          "Medium"
         ]
       },
       "routing": {
         "eligible_records": "node_004",
+        "watchlist_records": "node_004_watchlist",
         "excluded_records": "node_003_excluded_log"
       },
       "risk_notes": [
-        "Draft records should normally not be sent to public or paid channels.",
+        "Draft records should not be sent to public or paid channels.",
         "Needs Review records should be checked by a human first.",
-        "Rejected records should never be included in a digest."
+        "Rejected records should never be included in a digest.",
+        "High, Avoid, and Unknown risk level records should not appear as top opportunities.",
+        "Watchlist records may appear only in the Watchlist section."
       ]
     },
     {
@@ -135,19 +189,22 @@
       "sorting_rules": [
         "Sort by opportunity_score descending.",
         "Prefer Medium or High confidence records.",
-        "Exclude high-risk records unless placed in the High-Risk Ideas section.",
+        "Include only Low or Medium risk level records in top opportunities.",
+        "Exclude High, Avoid, or Unknown risk level records from top opportunities.",
         "Limit top opportunities to 3 to 5 items.",
-        "Keep watchlist items separate from top opportunities."
+        "Keep watchlist items separate from top opportunities.",
+        "Keep high-risk items only in a separate risk section if needed."
       ],
       "output": {
-        "top_opportunities": "{{top_3_to_5_records}}",
+        "top_opportunities": "{{top_3_to_5_low_or_medium_risk_records}}",
         "watchlist_items": "{{watchlist_records}}",
-        "high_risk_items": "{{high_risk_records}}"
+        "high_risk_items": "{{high_risk_records_for_internal_review_only}}"
       },
       "risk_notes": [
         "High score does not guarantee sales.",
         "Do not overstate weak trend signals.",
-        "Do not hide risk notes."
+        "Do not hide risk notes.",
+        "Do not present High or Avoid risk records as recommended opportunities."
       ]
     },
     {
@@ -165,6 +222,7 @@
         "Opportunity Score",
         "Confidence",
         "Risk Level",
+        "Risk Note",
         "Why It Matters",
         "Suggested Next Action",
         "Watchlist",
@@ -175,7 +233,9 @@
         "Keep message concise.",
         "Use clear section separators.",
         "Avoid long paragraphs.",
-        "Include risk notes.",
+        "Include confidence level.",
+        "Include risk level.",
+        "Include short risk note.",
         "Include disclaimer.",
         "Avoid hype language.",
         "Avoid guaranteed income language."
@@ -183,7 +243,8 @@
       "risk_notes": [
         "Do not make unsupported claims.",
         "Do not say a product will definitely sell.",
-        "Do not imply investment or financial advice."
+        "Do not imply investment or financial advice.",
+        "Do not remove risk_level or disclaimer fields."
       ]
     },
     {
@@ -224,7 +285,7 @@
       "id": "node_008",
       "name": "Message Safety Check",
       "type": "validation",
-      "purpose": "Check the final digest for unsafe claims, private data, spam language, or missing disclaimer.",
+      "purpose": "Check the final digest for unsafe claims, private data, spam language, missing risk fields, or missing disclaimer.",
       "checks": [
         "Does the message include private personal data?",
         "Does it include emails, phone numbers, addresses, or private profiles?",
@@ -233,7 +294,10 @@
         "Does it include unsupported health, financial, legal, or medical claims?",
         "Does it include copied copyrighted text?",
         "Does it include the required disclaimer?",
-        "Are high-risk ideas clearly marked?"
+        "Does it include confidence level?",
+        "Does it include risk level?",
+        "Are High or Avoid risk ideas excluded from top opportunities?",
+        "Are high-risk ideas clearly marked if mentioned?"
       ],
       "routing": {
         "safe_message": "node_009",
@@ -243,7 +307,8 @@
       "risk_notes": [
         "If private data appears, reject the message.",
         "If guaranteed income claims appear, rewrite before sending.",
-        "If disclaimer is missing, add it before sending."
+        "If disclaimer is missing, add it before sending.",
+        "If risk_level is missing, mark the message as Needs Revision."
       ]
     },
     {
@@ -269,6 +334,8 @@
         "No private personal data is included.",
         "No unsupported claims are included.",
         "No guaranteed income language is included.",
+        "Confidence levels are included.",
+        "Risk levels are included.",
         "Risk notes are included.",
         "Disclaimer is included.",
         "Message is useful and concise."
@@ -348,6 +415,7 @@
         "top_opportunities",
         "watchlist_items",
         "risk_notes",
+        "risk_levels",
         "disclaimer_included",
         "delivery_status",
         "reviewer_note"
@@ -362,15 +430,15 @@
   "message_templates": {
     "short_version": {
       "description": "Short daily digest for quick internal updates.",
-      "template": "🚀 TrendPilot AI Daily Digest\n\nDate: {{DATE}}\nRegion: {{REGION}}\nCategory: {{CATEGORY}}\n\nTop Opportunities Today:\n\n1. {{PRODUCT_IDEA_1}}\nScore: {{SCORE_1}}\nConfidence: {{CONFIDENCE_1}}\nRisk: {{RISK_1}}\nWhy it matters: {{SHORT_REASON_1}}\n\n2. {{PRODUCT_IDEA_2}}\nScore: {{SCORE_2}}\nConfidence: {{CONFIDENCE_2}}\nRisk: {{RISK_2}}\nWhy it matters: {{SHORT_REASON_2}}\n\n3. {{PRODUCT_IDEA_3}}\nScore: {{SCORE_3}}\nConfidence: {{CONFIDENCE_3}}\nRisk: {{RISK_3}}\nWhy it matters: {{SHORT_REASON_3}}\n\nWatchlist:\n- {{WATCHLIST_ITEM_1}}\n- {{WATCHLIST_ITEM_2}}\n\nImportant:\nThis digest is for research only. It does not guarantee sales, profit, or product success."
+      "template": "🚀 TrendPilot AI Daily Digest\n\nDate: {{DATE}}\nRegion: {{REGION}}\nCategory: {{CATEGORY}}\n\nTop Opportunities Today:\n\n1. {{PRODUCT_IDEA_1}}\nScore: {{SCORE_1}}\nConfidence: {{CONFIDENCE_1}}\nRisk Level: {{RISK_LEVEL_1}}\nRisk Note: {{RISK_NOTE_1}}\nWhy it matters: {{SHORT_REASON_1}}\n\n2. {{PRODUCT_IDEA_2}}\nScore: {{SCORE_2}}\nConfidence: {{CONFIDENCE_2}}\nRisk Level: {{RISK_LEVEL_2}}\nRisk Note: {{RISK_NOTE_2}}\nWhy it matters: {{SHORT_REASON_2}}\n\n3. {{PRODUCT_IDEA_3}}\nScore: {{SCORE_3}}\nConfidence: {{CONFIDENCE_3}}\nRisk Level: {{RISK_LEVEL_3}}\nRisk Note: {{RISK_NOTE_3}}\nWhy it matters: {{SHORT_REASON_3}}\n\nWatchlist:\n- {{WATCHLIST_ITEM_1}}\n- {{WATCHLIST_ITEM_2}}\n\nImportant:\nThis digest is for research only. It does not guarantee sales, profit, or product success."
     },
     "alert_version": {
       "description": "Alert message when a product idea reaches a high opportunity score.",
-      "template": "🚨 New Trend Alert\n\nProduct:\n{{PRODUCT_IDEA}}\n\nCategory:\n{{CATEGORY}}\n\nRegion:\n{{REGION}}\n\nOpportunity Score:\n{{OPPORTUNITY_SCORE}}\n\nConfidence:\n{{CONFIDENCE_LEVEL}}\n\nRisk Level:\n{{RISK_LEVEL}}\n\nWhy it matters:\n{{TREND_REASON}}\n\nTarget Audience:\n{{TARGET_AUDIENCE}}\n\nConsumer Pain Point:\n{{PAIN_POINT}}\n\nSuggested Content Angle:\n{{CONTENT_ANGLE}}\n\nSuggested Next Action:\n{{NEXT_ACTION}}\n\nSource:\n{{SOURCE_LINK}}\n\nNote:\nThis is a research signal, not a guarantee of demand or sales."
+      "template": "🚨 New Trend Alert\n\nProduct:\n{{PRODUCT_IDEA}}\n\nCategory:\n{{CATEGORY}}\n\nRegion:\n{{REGION}}\n\nOpportunity Score:\n{{OPPORTUNITY_SCORE}}\n\nConfidence:\n{{CONFIDENCE_LEVEL}}\n\nRisk Level:\n{{RISK_LEVEL}}\n\nRisk Note:\n{{RISK_NOTE}}\n\nWhy it matters:\n{{TREND_REASON}}\n\nTarget Audience:\n{{TARGET_AUDIENCE}}\n\nConsumer Pain Point:\n{{PAIN_POINT}}\n\nSuggested Content Angle:\n{{CONTENT_ANGLE}}\n\nSuggested Next Action:\n{{NEXT_ACTION}}\n\nSource:\n{{SOURCE_LINK}}\n\nNote:\nThis is a research signal, not a guarantee of demand or sales."
     },
     "weekly_summary_version": {
       "description": "Weekly summary message for an opt-in channel or internal team.",
-      "template": "📊 TrendPilot AI Weekly Brief\n\nWeek:\n{{WEEK}}\n\nRegion:\n{{REGION}}\n\nMain Categories Reviewed:\n{{CATEGORIES_REVIEWED}}\n\nTop 5 Opportunities:\n\n1. {{PRODUCT_1}} — Score: {{SCORE_1}} — Risk: {{RISK_1}}\n2. {{PRODUCT_2}} — Score: {{SCORE_2}} — Risk: {{RISK_2}}\n3. {{PRODUCT_3}} — Score: {{SCORE_3}} — Risk: {{RISK_3}}\n4. {{PRODUCT_4}} — Score: {{SCORE_4}} — Risk: {{RISK_4}}\n5. {{PRODUCT_5}} — Score: {{SCORE_5}} — Risk: {{RISK_5}}\n\nStrongest Category:\n{{STRONGEST_CATEGORY}}\n\nMain Consumer Theme:\n{{MAIN_CONSUMER_THEME}}\n\nMain Risk This Week:\n{{MAIN_RISK}}\n\nRecommended Next Action:\n{{RECOMMENDED_ACTION}}\n\nDisclaimer:\nFor research and informational purposes only. No sales or profit guaranteed."
+      "template": "📊 TrendPilot AI Weekly Brief\n\nWeek:\n{{WEEK}}\n\nRegion:\n{{REGION}}\n\nMain Categories Reviewed:\n{{CATEGORIES_REVIEWED}}\n\nTop 5 Opportunities:\n\n1. {{PRODUCT_1}} — Score: {{SCORE_1}} — Risk Level: {{RISK_LEVEL_1}}\n2. {{PRODUCT_2}} — Score: {{SCORE_2}} — Risk Level: {{RISK_LEVEL_2}}\n3. {{PRODUCT_3}} — Score: {{SCORE_3}} — Risk Level: {{RISK_LEVEL_3}}\n4. {{PRODUCT_4}} — Score: {{SCORE_4}} — Risk Level: {{RISK_LEVEL_4}}\n5. {{PRODUCT_5}} — Score: {{SCORE_5}} — Risk Level: {{RISK_LEVEL_5}}\n\nStrongest Category:\n{{STRONGEST_CATEGORY}}\n\nMain Consumer Theme:\n{{MAIN_CONSUMER_THEME}}\n\nMain Risk This Week:\n{{MAIN_RISK}}\n\nRecommended Next Action:\n{{RECOMMENDED_ACTION}}\n\nDisclaimer:\nFor research and informational purposes only. No sales or profit guaranteed."
     }
   },
   "recommended_input_record": {
@@ -389,6 +457,7 @@
     "pain_point": "Jewelry can get tangled, scratched, or lost during travel.",
     "content_angle": "Before-and-after packing routine showing messy jewelry versus organized travel case.",
     "risk_note": "Avoid copying creator content or competitor images. Verify material claims and zipper quality.",
+    "risk_level": "Low",
     "confidence": "Medium",
     "opportunity_score": 15,
     "next_action": "Check marketplace pricing, review complaints, and supplier customization options.",
