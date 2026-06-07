@@ -38,46 +38,6 @@
     "recommended_frequency": "Daily",
     "human_review_required": true
   },
-  "standard_fields": [
-    "record_id",
-    "source_type",
-    "source_name",
-    "source_url",
-    "collection_date",
-    "publication_date",
-    "region",
-    "category",
-    "keyword",
-    "product_name",
-    "trend_signal",
-    "evidence_summary",
-    "target_audience",
-    "pain_point",
-    "content_angle",
-    "price_signal",
-    "competition_signal",
-    "risk_note",
-    "risk_level",
-    "confidence",
-    "opportunity_score",
-    "next_action",
-    "review_status",
-    "reviewer_note"
-  ],
-  "risk_level_values": [
-    "Low",
-    "Medium",
-    "High",
-    "Avoid",
-    "Unknown"
-  ],
-  "review_status_values": [
-    "Draft",
-    "Needs Review",
-    "Approved",
-    "Rejected",
-    "Watchlist"
-  ],
   "pseudo_nodes": [
     {
       "id": "node_001",
@@ -623,5 +583,12 @@
     "Make investment decisions",
     "Promote unsafe regulated products without review"
   ],
-  "disclaimer": "This pseudo workflow is based on public data research concepts and AI-assisted analysis. It is for educational and planning purposes only. It does not guarantee product demand, sales, profit, or business success. Users should verify all sources, review platform rules, check compliance requirements, and conduct their own due diligence before making business decisions."
+  "disclaimer": "This pseudo workflow is based on public data research concepts and AI-assisted analysis. It is for educational and planning purposes only. It does not guarantee product demand, sales, profit, or business success. Users should verify all sources, review platform rules, check compliance requirements, and conduct their own due diligence before making business decisions.",
+  "schema_references": {
+    "canonical_python_fields": "trendpilot/fields.py",
+    "trend_signal_schema": "schemas/trend-signal.schema.json",
+    "product_score_schema": "schemas/product-score.schema.json",
+    "source_log_template": "templates/source-log-template.csv",
+    "note": "Use the schema files and trendpilot/fields.py as the source of truth instead of copying field enums into every pseudo workflow."
+  }
 }

@@ -1,12 +1,14 @@
 # TrendPilot AI
 
+[![CI](https://github.com/lamguo/trendpilot-ai/actions/workflows/ci.yml/badge.svg)](https://github.com/lamguo/trendpilot-ai/actions/workflows/ci.yml)
+
 **AI-powered toolkit for global trend intelligence, product research, and e-commerce opportunity reports.**
 
-TrendPilot AI is a license-safe starter kit for builders, marketers, researchers, and e-commerce operators who want to design AI-powered trend intelligence workflows using public data sources, prompt templates, report templates, scoring models, pseudo-workflows, and integration guides.
+TrendPilot AI is a license-safe starter kit for builders, marketers, researchers, and e-commerce operators who want to design AI-powered trend intelligence workflows using public data sources, prompt templates, report templates, scoring models, pseudo-workflows, integration guides, and a lightweight local Python execution layer.
 
 It does **not** copy or redistribute third-party project code.
 
-Instead, it organizes original documentation, prompts, templates, workflows, schemas, and safe integration guidance to help users build responsible AI-powered trend research systems.
+Instead, it organizes original documentation, prompts, templates, workflows, schemas, safe integration guidance, and small executable examples to help users build responsible AI-powered trend research systems.
 
 ---
 
@@ -22,6 +24,7 @@ TrendPilot AI helps users design workflows that can:
 - Create Telegram or email digests
 - Store research records in Google Sheets
 - Add human review before publishing or monetizing reports
+- Run local CSV validation, product scoring, and Markdown report generation through a small Python CLI
 
 ---
 
@@ -78,13 +81,39 @@ trendpilot-ai/
 ├── ATTRIBUTION.md
 ├── DISCLAIMER.md
 ├── SECURITY.md
+├── UPGRADE_NOTES.md
+├── pyproject.toml
+├── setup.py
+├── requirements.txt
+├── requirements-dev.txt
+├── requirements-integrations.txt
+├── Makefile
+├── docker-compose.yml
+├── .env.example
 ├── .github/
-│   └── FUNDING.yml
+│   ├── FUNDING.yml
+│   ├── workflows/
+│   │   ├── ci.yml
+│   │   └── publish.yml
+│   ├── ISSUE_TEMPLATE/
+│   └── PULL_REQUEST_TEMPLATE.md
+├── trendpilot/
+│   ├── cli.py
+│   ├── scoring.py
+│   ├── records.py
+│   ├── report.py
+│   └── fields.py
+├── tests/
+│   ├── test_scoring.py
+│   ├── test_records.py
+│   └── test_report.py
 ├── docs/
 │   ├── architecture.md
 │   ├── data-sources.md
 │   ├── tool-map.md
 │   ├── workflow-design.md
+│   ├── execution-layer.md
+│   ├── publishing.md
 │   ├── compliance.md
 │   ├── license-risk-matrix.md
 │   └── monetization.md
@@ -116,6 +145,9 @@ trendpilot-ai/
 │       ├── README.md
 │       ├── daily_report_generator.py
 │       └── score_product_idea.py
+├── integrations/examples/
+│   ├── firecrawl_fetch.py
+│   └── google_sheets_append.py
 ├── workflows/
 │   ├── README.md
 │   ├── n8n-daily-trend-intelligence.pseudo.json
@@ -140,6 +172,7 @@ Start here:
 
 - [System Architecture](docs/architecture.md)
 - [Workflow Design](docs/workflow-design.md)
+- [Execution Layer](docs/execution-layer.md)
 - [Data Sources](docs/data-sources.md)
 
 ### 2. Choose a research workflow
@@ -204,8 +237,55 @@ Use the Python examples to generate a simple Markdown report or score a product 
 - [Daily Report Generator](examples/python/daily_report_generator.py)
 - [Product Idea Scoring Script](examples/python/score_product_idea.py)
 
+
 These scripts use only the Python standard library.
 They do not scrape websites, call external APIs, or send messages.
+
+### 8. Install and run the local CLI
+
+```bash
+python -m pip install -r requirements.txt
+python -m trendpilot validate --input examples/sample-source-log.csv
+python -m trendpilot report --input examples/sample-source-log.csv --output examples/generated-daily-report.md --limit 5
+```
+
+You can also use Makefile shortcuts:
+
+```bash
+make install
+make test
+make validate
+make report
+make score
+```
+
+
+Development shortcuts:
+
+```bash
+make install
+make dev
+make ci
+```
+
+The `score` shortcut uses `examples/sample-product-score-input.json`, so the Makefile stays readable while the CLI remains scriptable.
+
+GitHub Actions CI is available at `.github/workflows/ci.yml` and runs linting, unit tests, schema sample validation, and CLI smoke tests.
+
+For details, see [Execution Layer](docs/execution-layer.md).
+
+For optional package publishing details, see [Publishing Guide](docs/publishing.md).
+
+### 9. Try optional integrations
+
+Optional integration examples are available in [integrations/examples](integrations/examples/README.md).
+
+These examples require your own credentials and are not enabled by default:
+
+- Firecrawl URL fetch example
+- Google Sheets append example
+- local n8n runtime through `docker-compose.yml`
+
 
 ---
 
@@ -338,6 +418,7 @@ Core documentation:
 - [Data Sources](docs/data-sources.md)
 - [Tool Map](docs/tool-map.md)
 - [Workflow Design](docs/workflow-design.md)
+- [Execution Layer](docs/execution-layer.md)
 - [Compliance Guide](docs/compliance.md)
 - [License Risk Matrix](docs/license-risk-matrix.md)
 - [Monetization Guide](docs/monetization.md)
@@ -614,3 +695,8 @@ This repository uses the MIT License for original TrendPilot AI content.
 This does not change the licenses of third-party tools referenced in this repository.
 
 Before using any external project, review that project's own license, documentation, and terms.
+
+- [Sample Product Score JSON](examples/sample-product-score.json)
+- [Sample Trend Signal JSON](examples/sample-trend-signal.json)
+- [Sample Report Record JSON](examples/sample-report-record.json)
+- [Sample Product Score Input JSON](examples/sample-product-score-input.json)

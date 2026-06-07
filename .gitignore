@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Local outputs
+data/
+outputs/
+examples/generated-*.md
+examples/generated-*.json
+
+# Secrets and local config
+.env
+*.pem
+*.key
+*service-account*.json
+credentials.json
+token.json
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+build/
+dist/
+*credentials*.json

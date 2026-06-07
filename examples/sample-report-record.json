@@ -1,0 +1,35 @@
+{
+  "report_id": "TP-REPORT-001",
+  "report_type": "Daily Trend Report",
+  "report_date": "2026-06-07",
+  "generated_at": "2026-06-07T00:00:00Z",
+  "title": "Sample Daily Trend Report",
+  "region": "United States",
+  "category": "Home office",
+  "executive_summary": "Illustrative report record for schema validation only. It does not claim demand, sales, or profit.",
+  "records": [
+    {
+      "record_id": "TP-SIGNAL-001",
+      "source_url": "https://example.com/public-trend-source",
+      "summary": "Sample public trend signal used for schema validation."
+    }
+  ],
+  "opportunities": [
+    {
+      "product_idea": "Portable desk organizer",
+      "category": "Home office",
+      "trend_signal": "Sample public content mentions compact desk organization.",
+      "opportunity_score": 10,
+      "risk_note": "Illustrative only; requires current evidence.",
+      "risk_level": "Unknown",
+      "confidence": "Low",
+      "next_action": "Validate with current public sources."
+    }
+  ],
+  "risk_note": "This report is a sample and requires human review before use.",
+  "risk_level": "Unknown",
+  "confidence": "Low",
+  "next_action": "Replace sample data with current public evidence and review sources.",
+  "review_status": "Draft",
+  "reviewer_note": null
+}

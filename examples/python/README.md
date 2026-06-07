@@ -1,32 +1,39 @@
 # Python Examples
 
-This folder contains small, dependency-free Python examples for TrendPilot AI.
+These examples demonstrate the lightweight local execution layer included in TrendPilot AI.
 
-These scripts are intentionally lightweight.
-They are designed for local testing, CSV formatting, report generation, and scoring model demonstration.
+The core package is dependency-free and can be run directly with Python 3.9+.
 
-They do **not**:
+## Install locally
 
-- Scrape websites
-- Call external APIs
-- Send Telegram messages or emails
-- Collect private data
-- Automate outreach
-- Guarantee product demand, sales, or profit
+From the repository root:
 
----
+```bash
+python -m pip install -e .
+```
 
-## Requirements
+## Validate the sample source log
 
-Python 3.10 or newer is recommended.
+```bash
+python -m trendpilot validate --input examples/sample-source-log.csv
+```
 
-No third-party packages are required.
+or, after editable install:
 
----
+```bash
+trendpilot validate --input examples/sample-source-log.csv
+```
 
-## 1. Generate a daily Markdown report
+## Generate a Markdown report
 
-From the repository root, run:
+```bash
+python -m trendpilot report \
+  --input examples/sample-source-log.csv \
+  --output examples/generated-daily-report.md \
+  --limit 5
+```
+
+Backward-compatible wrapper:
 
 ```bash
 python examples/python/daily_report_generator.py \
@@ -34,78 +41,50 @@ python examples/python/daily_report_generator.py \
   --output examples/generated-daily-report.md
 ```
 
-Optional filters:
+## Score a product idea
 
 ```bash
-python examples/python/daily_report_generator.py \
-  --input examples/sample-source-log.csv \
-  --output examples/generated-daily-report.md \
-  --region "United States" \
-  --limit 5
+python -m trendpilot score \
+  --score-id TP-DEMO-001 \
+  --product-idea "Portable desk organizer" \
+  --category "Home office" \
+  --target-region "United States" \
+  --target-audience "Remote workers and students" \
+  --demand 4 \
+  --social 3 \
+  --price 3 \
+  --supplier 4 \
+  --differentiation 3 \
+  --competition 4 \
+  --shipping 2 \
+  --compliance 1 \
+  --risk-level Low \
+  --confidence Medium
 ```
 
-The script reads a source log CSV and creates a simple Markdown report grouped by opportunity score.
-
----
-
-## 2. Score a product idea
-
-Example:
+Backward-compatible wrapper:
 
 ```bash
 python examples/python/score_product_idea.py \
-  --product-name "Modular Desk Cable Organizer" \
-  --category "Home Office Accessories" \
+  --product-name "Portable desk organizer" \
+  --category "Home office" \
   --region "United States" \
   --demand 4 \
   --social 3 \
   --price 3 \
   --supplier 4 \
   --differentiation 3 \
-  --competition 3 \
-  --shipping 1 \
-  --compliance 1 \
-  --risk-level Low \
-  --confidence Medium \
-  --review-status "Needs Review"
+  --competition 4 \
+  --shipping 2 \
+  --compliance 1
 ```
 
-Optional CSV output:
+## Run tests
 
 ```bash
-python examples/python/score_product_idea.py \
-  --product-name "Modular Desk Cable Organizer" \
-  --category "Home Office Accessories" \
-  --region "United States" \
-  --demand 4 \
-  --social 3 \
-  --price 3 \
-  --supplier 4 \
-  --differentiation 3 \
-  --competition 3 \
-  --shipping 1 \
-  --compliance 1 \
-  --risk-level Low \
-  --confidence Medium \
-  --review-status "Needs Review" \
-  --csv-output examples/generated-product-score.csv
+python -m unittest discover -s tests
 ```
 
----
+## Safety note
 
-## Scoring formula
-
-```text
-Opportunity Score =
-Demand Signal
-+ Social Visibility
-+ Price Potential
-+ Supplier Availability
-+ Differentiation Potential
-- Competition Level
-- Shipping Difficulty
-- Compliance Risk
-```
-
-A high score is only a research signal.
-It does not guarantee sales, profit, or product success.
+These examples do not scrape websites, call external APIs, or send messages. They only process local inputs. Scores are research signals only and do not guarantee demand, sales, profit, or product success.

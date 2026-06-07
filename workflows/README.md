@@ -469,3 +469,32 @@ The value is in:
 - Practical reports
 
 TrendPilot AI should remain a safe, useful, and license-aware workflow starter kit.
+
+---
+
+## Important: Pseudo-workflow Scope
+
+Files ending in `.pseudo.json` are planning references only.
+
+They are not import-ready n8n exports and should not be presented as working automation files. For runnable local examples, use:
+
+- `python -m trendpilot validate`
+- `python -m trendpilot report`
+- `python -m trendpilot score`
+- `docker-compose.yml` for a local n8n runtime shell
+
+The pseudo-workflows remain in the repository to explain workflow logic without copying third-party workflow exports or implying platform-ready automation.
+
+
+## Source of Truth for Fields
+
+The `.pseudo.json` files intentionally avoid repeating the full standard field list in every workflow.
+
+Use these files as the canonical references instead:
+
+- `trendpilot/fields.py` for Python constants
+- `schemas/trend-signal.schema.json` for trend signal JSON records
+- `schemas/product-score.schema.json` for product score JSON records
+- `templates/source-log-template.csv` for CSV source log columns
+
+This reduces maintenance risk when field names or allowed enum values change.

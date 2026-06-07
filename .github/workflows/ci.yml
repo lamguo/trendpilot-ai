@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.12"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package and dev tools
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+
+      - name: Lint
+        run: python -m ruff check .
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests
+
+      - name: Validate JSON schema samples
+        run: python scripts/validate_schema_samples.py
+
+      - name: Run CLI smoke tests
+        run: |
+          trendpilot validate --input examples/sample-source-log.csv
+          trendpilot report --input examples/sample-source-log.csv --output examples/generated-daily-report.md --limit 2
+          trendpilot score --input examples/sample-product-score-input.json --output examples/generated-product-score.json

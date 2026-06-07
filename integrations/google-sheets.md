@@ -6,6 +6,9 @@ TrendPilot AI does not require Google Sheets, but it is a practical option for e
 
 Google Sheets should be treated as a storage and review layer, not as a private data warehouse or spam contact database.
 
+
+> Runnable example: `integrations/examples/google_sheets_append.py` demonstrates appending source-log rows to Google Sheets with a service account.
+
 ---
 
 ## Role in TrendPilot AI

@@ -298,6 +298,52 @@ Research marketplace pricing and customer review complaints for jewelry travel o
 
 ---
 
+---
+
+## Machine-Readable Output Option
+
+For automation, Google Sheets, n8n, Dify, or Python workflows, return a JSON object that aligns with `schemas/trend-signal.schema.json`.
+
+Use these exact field names when machine-readable output is required:
+
+```json
+{
+  "record_id": "TP-SIGNAL-001",
+  "source_type": "public source type",
+  "source_name": "public source name",
+  "source_url": "https://example.com/public-source",
+  "collection_date": "YYYY-MM-DD",
+  "publication_date": null,
+  "region": "Target region",
+  "category": "Product category",
+  "keyword": "Main keyword or null",
+  "product_name": "Product or category idea",
+  "trend_signal": "Observed trend signal based only on the provided source material.",
+  "evidence_summary": "Short source-based summary without long copied text.",
+  "target_audience": "Likely audience or null",
+  "pain_point": "Consumer pain point or null",
+  "content_angle": "Short-form content angle or null",
+  "price_signal": "Pricing signal or null",
+  "competition_signal": "Competition signal or null",
+  "risk_note": "Human-readable risk or uncertainty explanation.",
+  "risk_level": "Unknown",
+  "confidence": "Low",
+  "opportunity_score": null,
+  "next_action": "Suggested validation step.",
+  "review_status": "Draft",
+  "reviewer_note": null
+}
+```
+
+Rules for JSON mode:
+
+- Return JSON only.
+- Do not mix Markdown tables with JSON output.
+- Keep `risk_note` and `risk_level` separate.
+- Use `risk_level`: `Low`, `Medium`, `High`, `Avoid`, or `Unknown`.
+- Use `confidence`: `Low`, `Medium`, or `High`.
+- Use `review_status`: `Draft`, `Needs Review`, `Approved`, `Rejected`, or `Watchlist`.
+
 ## Best Use Cases
 
 Use this prompt for:
@@ -337,3 +383,39 @@ Trend analysis is not proof of product success.
 Every output should be treated as a research signal, not a guarantee.
 
 Always verify sources, check compliance, review marketplace conditions, and use human judgment before making business decisions.
+
+
+---
+
+## Schema Alignment
+
+When structured output is requested, use field names aligned with `schemas/trend-signal.schema.json` and the standard source-log fields:
+
+```text
+record_id
+source_type
+source_name
+source_url
+collection_date
+publication_date
+region
+category
+keyword
+product_name
+trend_signal
+evidence_summary
+target_audience
+pain_point
+content_angle
+price_signal
+competition_signal
+risk_note
+risk_level
+confidence
+opportunity_score
+next_action
+review_status
+reviewer_note
+```
+
+Do not rename `price_signal` to `price_potential_score` in trend-signal records. Use `price_potential` only inside product-score JSON under the nested `scores` object.

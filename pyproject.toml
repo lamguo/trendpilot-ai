@@ -1,0 +1,62 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trendpilot-ai"
+version = "0.2.1"
+description = "Lightweight AI trend intelligence starter kit with local scoring, validation, and report generation."
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "TrendPilot AI contributors" }]
+keywords = ["trend-intelligence", "ecommerce", "ai", "market-research", "starter-kit"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Information Technology",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Office/Business",
+  "Topic :: Text Processing",
+]
+dependencies = []
+
+[project.optional-dependencies]
+integrations = [
+  "google-api-python-client>=2.0.0",
+  "google-auth>=2.0.0",
+]
+dev = [
+  "build>=1.0.0",
+  "jsonschema>=4.0.0",
+  "ruff>=0.5.0",
+  "twine>=5.0.0",
+]
+
+[project.scripts]
+trendpilot = "trendpilot.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/lamguo/trendpilot-ai"
+Repository = "https://github.com/lamguo/trendpilot-ai"
+Issues = "https://github.com/lamguo/trendpilot-ai/issues"
+Documentation = "https://github.com/lamguo/trendpilot-ai#readme"
+Changelog = "https://github.com/lamguo/trendpilot-ai/blob/main/CHANGELOG.md"
+
+[tool.setuptools]
+packages = ["trendpilot"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py39"
+exclude = [".git", "build", "dist", "*.egg-info"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+ignore = []

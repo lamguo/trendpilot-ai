@@ -69,26 +69,30 @@ Public research signals:
 
 Score the product idea from 1 to 5 for each dimension:
 
-1. Demand Signal
-2. Social Visibility
-3. Price Potential
-4. Supplier Availability
-5. Differentiation Potential
-6. Competition Level
-7. Shipping Difficulty
-8. Compliance Risk
+1. demand_signal
+2. social_visibility
+3. price_potential
+4. supplier_availability
+5. differentiation_potential
+6. competition_level
+7. shipping_difficulty
+8. compliance_risk
 
 Use this formula:
 
-Opportunity Score =
-Demand Signal
-+ Social Visibility
-+ Price Potential
-+ Supplier Availability
-+ Differentiation Potential
-- Competition Level
-- Shipping Difficulty
-- Compliance Risk
+opportunity_score =
+demand_signal
++ social_visibility
++ price_potential
++ supplier_availability
++ differentiation_potential
+- competition_level
+- shipping_difficulty
+- compliance_risk
+
+Return valid JSON only.
+
+Use the exact field names defined in schemas/product-score.schema.json.
 
 Rules:
 - Use only the provided public research signals.
@@ -98,10 +102,8 @@ Rules:
 - If evidence is weak, lower the confidence level.
 - If compliance or safety risk exists, clearly explain it.
 - If the product may involve trademark, platform, health, baby, electronics, battery, cosmetic, medical, or shipping risk, mention it.
-- Include a final recommendation: Strong Candidate, Test Carefully, Watchlist, or Avoid.
-Also include:
-- risk_note: short explanation of the main risk
-- risk_level: Low, Medium, High, Avoid, or Unknown
+- Include a final score_interpretation: Strong Candidate, Test Carefully, Watchlist, or Avoid.
+- Keep risk_note and risk_level as separate fields.
 ```
 
 ---
@@ -126,114 +128,60 @@ Known Risks:
 
 ---
 
-## Recommended Output Format
+## Required JSON Output Format
 
-```markdown
-# Product Opportunity Score
+Return **valid JSON only**. Do not wrap the response in Markdown.
 
-## Product Summary
+Use the same field names as `schemas/product-score.schema.json`:
 
-**Product Idea:**  
-**Category:**  
-**Target Region:**  
-**Target Audience:**  
-
-## Evidence Summary
-
-Summarize the provided public evidence in original words.
-
-## Scoring Table
-
-| Dimension | Score | Reason |
-|---|---:|---|
-| Demand Signal |  |  |
-| Social Visibility |  |  |
-| Price Potential |  |  |
-| Supplier Availability |  |  |
-| Differentiation Potential |  |  |
-| Competition Level |  |  |
-| Shipping Difficulty |  |  |
-| Compliance Risk |  |  |
-
-## Opportunity Score
-
-```text
-Opportunity Score =
-Demand Signal
-+ Social Visibility
-+ Price Potential
-+ Supplier Availability
-+ Differentiation Potential
-- Competition Level
-- Shipping Difficulty
-- Compliance Risk
+```json
+{
+  "score_id": "TP-SCORE-001",
+  "product_idea": "Example product idea",
+  "category": "Example category",
+  "target_region": "United States",
+  "target_audience": "Example target audience",
+  "evaluated_at": null,
+  "source_urls": ["https://example.com/source"],
+  "evidence_summary": "Summarize only the evidence provided by the user.",
+  "scores": {
+    "demand_signal": 1,
+    "social_visibility": 1,
+    "price_potential": 1,
+    "supplier_availability": 1,
+    "differentiation_potential": 1,
+    "competition_level": 1,
+    "shipping_difficulty": 1,
+    "compliance_risk": 1
+  },
+  "opportunity_score": 2,
+  "score_interpretation": "Watchlist",
+  "main_strengths": ["Example strength"],
+  "main_risks": ["Example risk"],
+  "risk_note": "Short explanation of uncertainty or compliance concern.",
+  "risk_level": "Unknown",
+  "confidence": "Low",
+  "next_action": "Validate current sources, competitors, pricing, and compliance requirements.",
+  "review_status": "Needs Review",
+  "reviewer_note": null
+}
 ```
 
-**Final Score:**  
+Rules:
 
-## Score Interpretation
-
-Choose one:
-
-- Strong Candidate
-- Test Carefully
-- Watchlist
-- Avoid
-
-## Confidence Level
-
-Choose one:
-
-- Low
-- Medium
-- High
-
-## Risk Level
-
-Choose one:
-
-- Low
-- Medium
-- High
-- Avoid
-- Unknown
-
-## Risk Note
-
-Write a short explanation of the main risk.
-
-## Main Strengths
-
-1.  
-2.  
-3.  
-
-## Main Risks
-
-1.  
-2.  
-3.  
-
-## Suggested Validation Steps
-
-1.  
-2.  
-3.  
-
-## Final Recommendation
-
-Write a short recommendation based on the score, evidence, confidence level, and risk profile.
-
-## Disclaimer
-
-This score is based on public signals and AI-assisted analysis. It does not guarantee sales, profit, product demand, or business success.
-```
+- Output JSON only.
+- Scores must be integers from 1 to 5.
+- `risk_level` must be one of: `Low`, `Medium`, `High`, `Avoid`, `Unknown`.
+- `confidence` must be one of: `Low`, `Medium`, `High`.
+- `review_status` must be one of: `Draft`, `Needs Review`, `Approved`, `Rejected`, `Watchlist`.
+- Do not use Markdown tables in JSON output.
+- Do not add fields that are not in the schema unless the user explicitly asks for an extended format.
 
 ---
 
 ## Scoring Guide
 
-### 1. Demand Signal
+### 1. demand_signal
 
 | Score | Meaning |
 |---:|---|
@@ -255,7 +203,7 @@ Consider:
 
 ---
 
-### 2. Social Visibility
+### 2. social_visibility
 
 | Score | Meaning |
 |---:|---|
@@ -277,7 +225,7 @@ Consider:
 
 ---
 
-### 3. Price Potential
+### 3. price_potential
 
 | Score | Meaning |
 |---:|---|
@@ -298,7 +246,7 @@ Consider:
 
 ---
 
-### 4. Supplier Availability
+### 4. supplier_availability
 
 | Score | Meaning |
 |---:|---|
@@ -320,7 +268,7 @@ Consider:
 
 ---
 
-### 5. Differentiation Potential
+### 5. differentiation_potential
 
 | Score | Meaning |
 |---:|---|
@@ -345,7 +293,7 @@ Consider:
 
 ---
 
-### 6. Competition Level
+### 6. competition_level
 
 This is a negative factor.
 
@@ -369,7 +317,7 @@ Consider:
 
 ---
 
-### 7. Shipping Difficulty
+### 7. shipping_difficulty
 
 This is a negative factor.
 
@@ -396,7 +344,7 @@ Consider:
 
 ---
 
-### 8. Compliance Risk
+### 8. compliance_risk
 
 This is a negative factor.
 
@@ -472,84 +420,47 @@ Known Risks:
 
 ---
 
-## Example Output
+## Example JSON Output
 
-```markdown
-# Product Opportunity Score
-
-## Product Summary
-
-**Product Idea:** Jewelry travel organizer  
-**Category:** Travel accessories  
-**Target Region:** United States  
-**Target Audience:** Women travelers, jewelry owners, gift buyers  
-
-## Evidence Summary
-
-The provided public signals suggest that jewelry organization during travel is a visible consumer problem. The product has content potential because it can be shown in packing routines and before-and-after organization scenes.
-
-## Scoring Table
-
-| Dimension | Score | Reason |
-|---|---:|---|
-| Demand Signal | 3 | There are visible public signals, but more marketplace validation is needed. |
-| Social Visibility | 5 | The product is easy to demonstrate visually in packing and travel content. |
-| Price Potential | 4 | It can be sold as a giftable or premium small accessory. |
-| Supplier Availability | 4 | Similar products are likely available in multiple materials and sizes. |
-| Differentiation Potential | 4 | Packaging, material, color, size, and gift positioning can create differentiation. |
-| Competition Level | 3 | The category may have moderate marketplace competition. |
-| Shipping Difficulty | 1 | The product is small, lightweight, and easy to ship. |
-| Compliance Risk | 1 | Low risk if no false material claims are made. |
-
-## Opportunity Score
-
-```text
-3 + 5 + 4 + 4 + 4 - 3 - 1 - 1 = 15
-```
-
-**Final Score:** 15
-
-## Score Interpretation
-
-Strong Candidate
-
-## Confidence Level
-
-Medium
-
-## Risk Level
-
-Low
-
-## Risk Note
-
-Low shipping and compliance risk, but quality and competition should still be reviewed.
-
-## Main Strengths
-
-1. Strong short-form content potential.
-2. Easy to ship and package.
-3. Can be positioned as a giftable lifestyle accessory.
-
-## Main Risks
-
-1. Competition may be moderate.
-2. Quality issues such as zipper durability should be checked.
-3. More marketplace pricing validation is needed.
-
-## Suggested Validation Steps
-
-1. Compare marketplace price ranges.
-2. Analyze public review complaints.
-3. Check supplier customization options.
-
-## Final Recommendation
-
-This product appears to be a strong candidate for deeper research because it has visible consumer pain points, good content potential, and low shipping difficulty. It should still be validated through competitor pricing, review analysis, and supplier quality checks.
-
-## Disclaimer
-
-This score is based on public signals and AI-assisted analysis. It does not guarantee sales, profit, product demand, or business success.
+```json
+{
+  "score_id": "TP-SCORE-001",
+  "product_idea": "Jewelry travel organizer",
+  "category": "Travel accessories",
+  "target_region": "United States",
+  "target_audience": "Women travelers, jewelry owners, gift buyers",
+  "evaluated_at": null,
+  "source_urls": ["https://example.com/public-trend-page"],
+  "evidence_summary": "The provided public signals suggest that jewelry organization during travel is a visible consumer problem. The product has content potential because it can be shown in packing routines and before-and-after organization scenes.",
+  "scores": {
+    "demand_signal": 3,
+    "social_visibility": 5,
+    "price_potential": 4,
+    "supplier_availability": 4,
+    "differentiation_potential": 4,
+    "competition_level": 3,
+    "shipping_difficulty": 1,
+    "compliance_risk": 1
+  },
+  "opportunity_score": 15,
+  "score_interpretation": "Strong Candidate",
+  "main_strengths": [
+    "Strong short-form content potential.",
+    "Easy to ship and package.",
+    "Can be positioned as a giftable lifestyle accessory."
+  ],
+  "main_risks": [
+    "Competition may be moderate.",
+    "Quality issues such as zipper durability should be checked.",
+    "More marketplace pricing validation is needed."
+  ],
+  "risk_note": "Low shipping and compliance risk, but quality and competition should still be reviewed.",
+  "risk_level": "Low",
+  "confidence": "Medium",
+  "next_action": "Compare marketplace price ranges, analyze public review complaints, and check supplier customization options.",
+  "review_status": "Needs Review",
+  "reviewer_note": null
+}
 ```
 
 ---
@@ -591,4 +502,4 @@ Do not use this prompt for:
 Product scoring is a research framework, not a guarantee.
 
 Every score should be reviewed by a human before making sourcing, advertising, or business decisions.
-The output should keep risk_note and risk_level as separate fields.
+The output should keep `risk_note` and `risk_level` as separate fields.

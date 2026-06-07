@@ -13,6 +13,9 @@ Official website:
 
 https://www.firecrawl.dev
 
+
+> Runnable example: `integrations/examples/firecrawl_fetch.py` demonstrates calling the Firecrawl API with `FIRECRAWL_API_KEY` from the environment.
+
 ---
 
 ## Role in TrendPilot AI

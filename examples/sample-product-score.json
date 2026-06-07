@@ -1,0 +1,39 @@
+{
+  "score_id": "TP-DEMO-001",
+  "product_idea": "Portable desk organizer",
+  "category": "Home office",
+  "target_region": "United States",
+  "target_audience": "Remote workers and students",
+  "evaluated_at": "2026-06-07T00:00:00Z",
+  "source_urls": [
+    "https://example.com/public-source"
+  ],
+  "evidence_summary": "Sample public signals suggest interest in compact desk organization, but the data is illustrative only.",
+  "scores": {
+    "demand_signal": 4,
+    "social_visibility": 3,
+    "price_potential": 3,
+    "supplier_availability": 4,
+    "differentiation_potential": 3,
+    "competition_level": 4,
+    "shipping_difficulty": 2,
+    "compliance_risk": 1
+  },
+  "opportunity_score": 10,
+  "score_interpretation": "Test Carefully",
+  "main_strengths": [
+    "Easy to demonstrate visually",
+    "Small and lightweight",
+    "Bundle-friendly"
+  ],
+  "main_risks": [
+    "Competitive category",
+    "Needs real marketplace validation"
+  ],
+  "risk_note": "The category may be crowded and should be validated with current marketplace and review data.",
+  "risk_level": "Medium",
+  "confidence": "Medium",
+  "next_action": "Check current marketplace pricing, review complaints, supplier options, and content angles.",
+  "review_status": "Needs Review",
+  "reviewer_note": null
+}

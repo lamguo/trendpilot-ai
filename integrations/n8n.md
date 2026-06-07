@@ -13,6 +13,9 @@ Official website:
 
 https://n8n.io
 
+
+> Local runtime example: `docker-compose.yml` starts a local n8n instance for experimentation. Pseudo-workflows are not import-ready exports.
+
 ---
 
 ## Role in TrendPilot AI
