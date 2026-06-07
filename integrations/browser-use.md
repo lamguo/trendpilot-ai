@@ -333,6 +333,7 @@ visible_content_patterns
 visible_customer_language
 research_summary
 risk_note
+risk_level
 confidence
 next_action
 review_status
@@ -428,6 +429,7 @@ Compliance risk
 Shipping risk
 Source quality risk
 Spam or platform abuse risk
+The workflow should return both risk_note and risk_level.
 ```
 
 High-risk output should be marked:
@@ -475,6 +477,7 @@ Before using browser-collected output in a report, confirm:
 - [ ] No fake engagement occurred
 - [ ] Source URL is saved
 - [ ] Risk note is included
+- [ ] Risk level is included
 - [ ] Confidence level is included
 - [ ] Human reviewer checked the output
 
