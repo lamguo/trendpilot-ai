@@ -93,7 +93,7 @@ Rules:
 - Do not approve high-risk products.
 - Clearly mark uncertainty.
 - If the risk cannot be determined from the input, say what must be checked.
-- Give a final risk level: Low, Medium, High, or Avoid.
+- Give a final risk level: Low, Medium, High, Avoid, or Unknown.
 ```
 
 ---
@@ -138,7 +138,7 @@ Known Risks:
 
 ## Overall Risk Level
 
-Low / Medium / High / Avoid
+Low / Medium / High / Avoid / Unknown
 
 ## Risk Summary
 
@@ -148,19 +148,19 @@ Low / Medium / High / Avoid
 
 | Risk Area | Risk Level | Notes |
 |---|---|---|
-| Product Safety | Low / Medium / High / Unknown |  |
-| Compliance / Certification | Low / Medium / High / Unknown |  |
-| Platform Policy | Low / Medium / High / Unknown |  |
-| Health / Medical / Wellness Claims | Low / Medium / High / Unknown |  |
-| Baby / Child Safety | Low / Medium / High / Unknown |  |
-| Electronics / Battery / Charging | Low / Medium / High / Unknown |  |
-| Food / Supplement / Ingredient | Low / Medium / High / Unknown |  |
-| Trademark / Copyright / IP | Low / Medium / High / Unknown |  |
-| Shipping / Customs / Fulfillment | Low / Medium / High / Unknown |  |
-| Privacy / Personal Data | Low / Medium / High / Unknown |  |
-| Spam / Platform Abuse | Low / Medium / High / Unknown |  |
-| Unsupported Claims | Low / Medium / High / Unknown |  |
-| Source Quality | Low / Medium / High / Unknown |  |
+| Product Safety | Low / Medium / High / Avoid / Unknown |  |
+| Compliance / Certification | Low / Medium / High / Avoid / Unknown |  |
+| Platform Policy | Low / Medium / High / Avoid / Unknown |  |
+| Health / Medical / Wellness Claims | Low / Medium / High / Avoid / Unknown |  |
+| Baby / Child Safety | Low / Medium / High / Avoid / Unknown |  |
+| Electronics / Battery / Charging | Low / Medium / High / Avoid / Unknown |  |
+| Food / Supplement / Ingredient | Low / Medium / High / Avoid / Unknown |  |
+| Trademark / Copyright / IP | Low / Medium / High / Avoid / Unknown |  |
+| Shipping / Customs / Fulfillment | Low / Medium / High / Avoid / Unknown |  |
+| Privacy / Personal Data | Low / Medium / High / Avoid / Unknown |  |
+| Spam / Platform Abuse | Low / Medium / High / Avoid / Unknown |  |
+| Unsupported Claims | Low / Medium / High / Avoid / Unknown |  |
+| Source Quality | Low / Medium / High / Avoid / Unknown |  |
 
 ## Main Risk Details
 
@@ -223,10 +223,34 @@ Choose one:
 
 [Explain the recommendation.]
 
+## Standard Review Fields
+
+**Risk Note:** [Short explanation of the main risk, uncertainty, source limitation, or compliance issue.]  
+**Risk Level:** Low / Medium / High / Avoid / Unknown  
+**Confidence Level:** Low / Medium / High  
+**Suggested Next Action:** [Clear next step for human review, source checking, compliance review, testing, or rejection.]  
+**Review Status:** Draft / Needs Review / Approved / Rejected / Watchlist
+
 ## Disclaimer
 
 This risk review is AI-assisted and for research purposes only. It does not provide legal, medical, financial, customs, tax, regulatory, or platform policy advice. Users should verify all requirements and consult qualified professionals when needed.
 ```
+
+---
+
+## Standard Review Field Rules
+
+Use the following standardized review fields when the output contains a product idea, content angle, pain point insight, report item, or risk decision:
+
+- **Risk Note:** Short human-readable explanation of uncertainty, compliance concerns, source limitations, product risk, or content risk.
+- **Risk Level:** Low / Medium / High / Avoid / Unknown
+- **Confidence Level:** Low / Medium / High
+- **Suggested Next Action:** Clear next step for validation, source checking, human review, testing, or rejection.
+- **Review Status:** Draft / Needs Review / Approved / Rejected / Watchlist
+
+Do not combine `Risk Note` and `Risk Level` into one field.
+Use `Unknown` when the available evidence is insufficient to judge risk.
+Do not mark an item as `Approved` unless a human reviewer has checked the source and context.
 
 ---
 
