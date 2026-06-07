@@ -1,0 +1,456 @@
+{
+  "name": "TrendPilot AI - Google Sheets Output Pseudo Workflow",
+  "type": "pseudo-workflow",
+  "version": "0.1.0",
+  "status": "planning-template",
+  "description": "A license-safe pseudo workflow for saving AI-assisted trend intelligence records into a structured Google Sheets research log.",
+  "important_notice": [
+    "This is not a real n8n export file.",
+    "This file is a pseudo workflow design for planning and educational purposes.",
+    "It should not be imported directly into n8n.",
+    "TrendPilot AI does not copy or redistribute third-party workflow exports.",
+    "Users must adapt this workflow to their own tools, APIs, Google account permissions, and compliance requirements."
+  ],
+  "safe_use_principles": [
+    "Store public trend research records only.",
+    "Do not store private personal data.",
+    "Do not store scraped personal emails, phone numbers, addresses, usernames, or private profiles.",
+    "Do not store API keys or secrets in Google Sheets.",
+    "Do not make private research sheets public accidentally.",
+    "Keep source links, confidence levels, risk notes, and review status.",
+    "Use human review before publishing, selling, or sending reports."
+  ],
+  "recommended_stack": {
+    "workflow_layer": "n8n, Make, Zapier, cron, or custom automation",
+    "data_storage": "Google Sheets",
+    "input_sources": [
+      "daily trend intelligence workflow",
+      "public community trend monitor workflow",
+      "manual research records",
+      "AI trend analysis output",
+      "product opportunity scoring output",
+      "risk check output"
+    ],
+    "related_templates": [
+      "templates/source-log-template.csv",
+      "templates/daily-trend-report.md",
+      "templates/product-opportunity-scorecard.md"
+    ]
+  },
+  "workflow_summary": {
+    "goal": "Receive structured trend records, validate required fields, normalize values, assign review status, and append them to a Google Sheets research log.",
+    "input": "Structured trend records from AI-assisted workflows.",
+    "output": "Rows added to a Google Sheets source log.",
+    "human_review_required": true
+  },
+  "pseudo_nodes": [
+    {
+      "id": "node_001",
+      "name": "Receive Trend Record",
+      "type": "trigger_or_input",
+      "purpose": "Receive a structured trend record from another workflow.",
+      "possible_inputs": [
+        "Daily trend intelligence workflow output",
+        "Community trend monitor output",
+        "Manual form submission",
+        "Webhook payload",
+        "CSV import",
+        "AI analysis result"
+      ],
+      "expected_fields": [
+        "source_type",
+        "source_name",
+        "source_url",
+        "collection_date",
+        "region",
+        "category",
+        "keyword",
+        "product_name",
+        "trend_signal",
+        "evidence_summary",
+        "target_audience",
+        "pain_point",
+        "content_angle",
+        "price_signal",
+        "competition_signal",
+        "risk_note",
+        "confidence",
+        "opportunity_score",
+        "next_action"
+      ],
+      "risk_notes": [
+        "Input should not include private personal data.",
+        "Input should not include full copyrighted articles, full reviews, or copied competitor listings."
+      ]
+    },
+    {
+      "id": "node_002",
+      "name": "Validate Required Fields",
+      "type": "validation",
+      "purpose": "Check whether the incoming record contains the minimum fields required for research logging.",
+      "required_fields": [
+        "source_type",
+        "source_name",
+        "source_url",
+        "collection_date",
+        "region",
+        "category",
+        "trend_signal",
+        "evidence_summary",
+        "risk_note",
+        "confidence"
+      ],
+      "routing": {
+        "valid_record": "node_003",
+        "missing_required_fields": "node_002_error_log"
+      },
+      "error_log_fields": [
+        "workflow_run_id",
+        "record_id",
+        "missing_fields",
+        "error_message",
+        "created_at"
+      ],
+      "risk_notes": [
+        "Do not save incomplete records as approved research.",
+        "If source URL is missing, mark the record as Needs Review."
+      ]
+    },
+    {
+      "id": "node_003",
+      "name": "Private Data Filter",
+      "type": "safety_filter",
+      "purpose": "Detect and reject records that appear to include private personal data or unsafe content.",
+      "checks": [
+        "Does the record include email addresses?",
+        "Does the record include phone numbers?",
+        "Does the record include private addresses?",
+        "Does the record include private messages?",
+        "Does the record include payment details?",
+        "Does the record include ID documents?",
+        "Does the record include personal health information?",
+        "Does the record include scraped user profiles?",
+        "Does the record include copied full reviews or long copyrighted text?"
+      ],
+      "routing": {
+        "safe_record": "node_004",
+        "unsafe_record": "node_003_rejected_log",
+        "uncertain_record": "node_004_with_needs_review_status"
+      },
+      "risk_notes": [
+        "The recommended default is to reject records with private personal data.",
+        "If unsure, mark as Needs Review and do not publish."
+      ]
+    },
+    {
+      "id": "node_004",
+      "name": "Normalize Record Fields",
+      "type": "data_processing",
+      "purpose": "Normalize field names, confidence levels, review status, and risk notes before saving.",
+      "normalization_rules": {
+        "confidence": [
+          "Low",
+          "Medium",
+          "High"
+        ],
+        "review_status": [
+          "Draft",
+          "Needs Review",
+          "Approved",
+          "Rejected",
+          "Watchlist"
+        ],
+        "source_type": [
+          "Search",
+          "Marketplace",
+          "Social",
+          "Community",
+          "Review",
+          "News / Report",
+          "Manual"
+        ]
+      },
+      "default_values": {
+        "review_status": "Draft",
+        "reviewer_note": "",
+        "publication_date": "",
+        "opportunity_score": ""
+      },
+      "output": "normalized_trend_record"
+    },
+    {
+      "id": "node_005",
+      "name": "Generate Record ID",
+      "type": "data_processing",
+      "purpose": "Create a unique record ID if one is not already provided.",
+      "record_id_format": "TRD-{{YYYYMMDD}}-{{sequence_number}}",
+      "examples": [
+        "TRD-20260607-001",
+        "TRD-20260607-002",
+        "TRD-20260607-003"
+      ],
+      "risk_notes": [
+        "Record IDs should not contain private user identifiers.",
+        "Record IDs should be simple and audit-friendly."
+      ]
+    },
+    {
+      "id": "node_006",
+      "name": "Map to Source Log Columns",
+      "type": "data_mapping",
+      "purpose": "Map normalized trend record fields to the Google Sheets source log structure.",
+      "recommended_template": "templates/source-log-template.csv",
+      "column_mapping": {
+        "record_id": "{{record_id}}",
+        "source_type": "{{source_type}}",
+        "source_name": "{{source_name}}",
+        "source_url": "{{source_url}}",
+        "collection_date": "{{collection_date}}",
+        "publication_date": "{{publication_date}}",
+        "region": "{{region}}",
+        "category": "{{category}}",
+        "keyword": "{{keyword}}",
+        "product_name": "{{product_name}}",
+        "trend_signal": "{{trend_signal}}",
+        "evidence_summary": "{{evidence_summary}}",
+        "target_audience": "{{target_audience}}",
+        "pain_point": "{{pain_point}}",
+        "content_angle": "{{content_angle}}",
+        "price_signal": "{{price_signal}}",
+        "competition_signal": "{{competition_signal}}",
+        "risk_note": "{{risk_note}}",
+        "confidence": "{{confidence}}",
+        "opportunity_score": "{{opportunity_score}}",
+        "next_action": "{{next_action}}",
+        "review_status": "{{review_status}}",
+        "reviewer_note": "{{reviewer_note}}"
+      }
+    },
+    {
+      "id": "node_007",
+      "name": "Duplicate Check",
+      "type": "validation",
+      "purpose": "Check whether a similar source URL, product idea, and collection date already exist in the sheet.",
+      "duplicate_check_fields": [
+        "source_url",
+        "product_name",
+        "keyword",
+        "collection_date"
+      ],
+      "routing": {
+        "new_record": "node_008",
+        "possible_duplicate": "node_007_duplicate_review_log"
+      },
+      "risk_notes": [
+        "Duplicate records should not be deleted automatically unless the user confirms.",
+        "Possible duplicates can be marked as Needs Review."
+      ]
+    },
+    {
+      "id": "node_008",
+      "name": "Append Row to Google Sheets",
+      "type": "storage",
+      "purpose": "Append the mapped trend record as a new row in the Google Sheets source log.",
+      "google_sheets_configuration": {
+        "spreadsheet_name": "TrendPilot AI Source Log",
+        "sheet_name": "source_log",
+        "append_mode": "append_row",
+        "header_row_required": true
+      },
+      "recommended_columns": [
+        "record_id",
+        "source_type",
+        "source_name",
+        "source_url",
+        "collection_date",
+        "publication_date",
+        "region",
+        "category",
+        "keyword",
+        "product_name",
+        "trend_signal",
+        "evidence_summary",
+        "target_audience",
+        "pain_point",
+        "content_angle",
+        "price_signal",
+        "competition_signal",
+        "risk_note",
+        "confidence",
+        "opportunity_score",
+        "next_action",
+        "review_status",
+        "reviewer_note"
+      ],
+      "risk_notes": [
+        "Do not make the sheet public unless reviewed.",
+        "Do not store private data or API keys in the sheet.",
+        "Control edit permissions carefully."
+      ]
+    },
+    {
+      "id": "node_009",
+      "name": "Add Review Status Logic",
+      "type": "data_processing",
+      "purpose": "Assign or update review status based on risk, confidence, and source quality.",
+      "example_rules": [
+        {
+          "condition": "confidence is Low",
+          "review_status": "Watchlist"
+        },
+        {
+          "condition": "risk_note contains high risk or compliance concern",
+          "review_status": "Needs Review"
+        },
+        {
+          "condition": "source_url is missing",
+          "review_status": "Needs Review"
+        },
+        {
+          "condition": "opportunity_score is high but risk is high",
+          "review_status": "Needs Review"
+        },
+        {
+          "condition": "record passes validation and human reviewer approves",
+          "review_status": "Approved"
+        }
+      ],
+      "risk_notes": [
+        "Do not automatically approve records for paid reports without human review.",
+        "AI-generated records should start as Draft or Needs Review."
+      ]
+    },
+    {
+      "id": "node_010",
+      "name": "Create Daily Sheet Summary",
+      "type": "aggregation",
+      "purpose": "Create a lightweight summary of the day's records.",
+      "summary_fields": [
+        "total_records",
+        "approved_records",
+        "draft_records",
+        "needs_review_records",
+        "watchlist_records",
+        "rejected_records",
+        "top_opportunity_score",
+        "most_common_category",
+        "highest_risk_category"
+      ],
+      "possible_outputs": [
+        "summary row",
+        "daily dashboard tab",
+        "Telegram digest input",
+        "email digest input",
+        "daily report input"
+      ]
+    },
+    {
+      "id": "node_011",
+      "name": "Trigger Report Generation",
+      "type": "workflow_trigger",
+      "purpose": "Optionally trigger another workflow to generate a daily report or Telegram digest.",
+      "trigger_conditions": [
+        "daily collection completed",
+        "minimum number of records reached",
+        "approved records exist",
+        "human review completed",
+        "manual trigger"
+      ],
+      "possible_next_workflows": [
+        "workflows/n8n-daily-trend-intelligence.pseudo.json",
+        "workflows/n8n-telegram-digest.pseudo.json"
+      ],
+      "risk_notes": [
+        "Only approved or reviewed records should be used for public or paid reports.",
+        "Draft records can be used for internal review only."
+      ]
+    },
+    {
+      "id": "node_012",
+      "name": "Error and Rejection Log",
+      "type": "logging",
+      "purpose": "Store rejected, incomplete, duplicate, or unsafe records for audit and debugging.",
+      "log_fields": [
+        "workflow_run_id",
+        "record_id",
+        "source_url",
+        "error_type",
+        "error_message",
+        "risk_reason",
+        "created_at",
+        "review_status"
+      ],
+      "risk_notes": [
+        "Do not store private data in error logs.",
+        "Error logs should not become hidden private data stores."
+      ]
+    }
+  ],
+  "recommended_google_sheet_tabs": [
+    {
+      "tab_name": "source_log",
+      "purpose": "Main structured trend record log.",
+      "template": "templates/source-log-template.csv"
+    },
+    {
+      "tab_name": "daily_summary",
+      "purpose": "Daily aggregated summary by date, category, score, and review status."
+    },
+    {
+      "tab_name": "watchlist",
+      "purpose": "Products, categories, keywords, or sources worth monitoring later."
+    },
+    {
+      "tab_name": "rejected_records",
+      "purpose": "Rejected or unsafe records with reasons."
+    },
+    {
+      "tab_name": "settings",
+      "purpose": "Source lists, allowed regions, categories, and workflow settings."
+    }
+  ],
+  "recommended_source_log_columns": [
+    "record_id",
+    "source_type",
+    "source_name",
+    "source_url",
+    "collection_date",
+    "publication_date",
+    "region",
+    "category",
+    "keyword",
+    "product_name",
+    "trend_signal",
+    "evidence_summary",
+    "target_audience",
+    "pain_point",
+    "content_angle",
+    "price_signal",
+    "competition_signal",
+    "risk_note",
+    "confidence",
+    "opportunity_score",
+    "next_action",
+    "review_status",
+    "reviewer_note"
+  ],
+  "human_review_rules": [
+    "Draft records are AI-generated and not ready to publish.",
+    "Needs Review records require human inspection.",
+    "Approved records may be used in reports after review.",
+    "Rejected records should not be used.",
+    "Watchlist records should be monitored but not treated as confirmed opportunities."
+  ],
+  "what_this_workflow_should_not_do": [
+    "Store private personal data",
+    "Store scraped contact databases",
+    "Store usernames or personal profiles unnecessarily",
+    "Store API keys or secrets",
+    "Make research sheets publicly editable",
+    "Automatically approve AI-generated claims",
+    "Publish high-risk records without review",
+    "Use sheets as a spam outreach database",
+    "Guarantee product demand, sales, or profit"
+  ],
+  "disclaimer": "This pseudo workflow is for educational and planning purposes only. It is designed to help users structure public trend research records in Google Sheets. It does not guarantee product demand, sales, profit, or business success. Users should verify all sources, review platform rules, protect private data, and conduct their own due diligence."
+}
