@@ -67,9 +67,10 @@ For each signal, extract:
 8. Short-form content angle
 9. Marketplace research angle
 10. Source-based evidence summary
-11. Risk or uncertainty
-12. Confidence level: Low, Medium, or High
-13. Suggested next action
+11. Risk note
+12. Risk level: Low, Medium, High, Avoid, or Unknown
+13. Confidence level: Low, Medium, or High
+14. Suggested next action
 
 Rules:
 - Use only the provided source material.
@@ -83,6 +84,7 @@ Rules:
 - If evidence is weak, mark confidence as Low.
 - If the signal needs more validation, say so clearly.
 - If there may be compliance, safety, platform, trademark, or shipping risk, mention it.
+- Return risk_note and risk_level separately.
 ```
 
 ---
@@ -153,9 +155,13 @@ Notes:
 
 [Summarize the source evidence in original words. Do not copy long text.]
 
-### Risk or Uncertainty
+### Risk Note
 
 [Explain what is unclear, weak, risky, or needs validation.]
+
+### Risk Level
+
+Low / Medium / High / Avoid / Unknown
 
 ### Confidence Level
 
@@ -273,9 +279,13 @@ Check price ranges, materials, size options, zipper quality, review complaints, 
 
 Public posts show the product being used in travel packing routines, and visible comments suggest buyer interest.
 
-### Risk or Uncertainty
+### Risk Note
 
 The signal needs validation through marketplace demand, supplier availability, and competition checks. Avoid copying creator videos or images.
+
+### Risk Level
+
+Medium
 
 ### Confidence Level
 
