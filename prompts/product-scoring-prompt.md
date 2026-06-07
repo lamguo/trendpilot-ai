@@ -99,6 +99,9 @@ Rules:
 - If compliance or safety risk exists, clearly explain it.
 - If the product may involve trademark, platform, health, baby, electronics, battery, cosmetic, medical, or shipping risk, mention it.
 - Include a final recommendation: Strong Candidate, Test Carefully, Watchlist, or Avoid.
+Also include:
+- risk_note: short explanation of the main risk
+- risk_level: Low, Medium, High, Avoid, or Unknown
 ```
 
 ---
@@ -184,6 +187,20 @@ Choose one:
 - Low
 - Medium
 - High
+
+## Risk Level
+
+Choose one:
+
+- Low
+- Medium
+- High
+- Avoid
+- Unknown
+
+## Risk Note
+
+Write a short explanation of the main risk.
 
 ## Main Strengths
 
@@ -500,6 +517,14 @@ Strong Candidate
 
 Medium
 
+## Risk Level
+
+Low
+
+## Risk Note
+
+Low shipping and compliance risk, but quality and competition should still be reviewed.
+
 ## Main Strengths
 
 1. Strong short-form content potential.
@@ -566,3 +591,4 @@ Do not use this prompt for:
 Product scoring is a research framework, not a guarantee.
 
 Every score should be reviewed by a human before making sourcing, advertising, or business decisions.
+The output should keep risk_note and risk_level as separate fields.
