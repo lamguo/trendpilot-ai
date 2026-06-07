@@ -1,1 +1,77 @@
+name: Bug report
+description: Report a problem in docs, prompts, templates, schemas, workflows, or examples.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a problem. Please do not include API keys, tokens, cookies, private data, or credentials.
 
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - README or project documentation
+        - Docs
+        - Prompts
+        - Templates
+        - Workflows
+        - Integrations
+        - Schemas
+        - Examples
+        - Python examples
+        - Security or compliance wording
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem description
+      description: Describe what is wrong or unclear.
+      placeholder: Explain the issue clearly.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should happen instead?
+      placeholder: Describe the expected result.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce or locate
+      description: Include file paths, section names, or commands if useful.
+      placeholder: |
+        1. Open ...
+        2. Run ...
+        3. See ...
+    validations:
+      required: false
+
+  - type: textarea
+    id: safe-context
+    attributes:
+      label: Safe context or sample input
+      description: Provide only non-sensitive example data.
+      placeholder: Do not include private data, credentials, or tokens.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Safety check
+      options:
+        - label: I have not included private data, credentials, API keys, tokens, cookies, or secrets.
+          required: true
+        - label: This issue is not asking for spam automation, fake engagement, credential misuse, or private data scraping.
+          required: true
