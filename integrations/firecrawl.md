@@ -216,6 +216,7 @@ visible_social_signal
 main_topic
 source_evidence_summary
 risk_note
+risk_level
 ```
 
 Do not store unnecessary personal data.
@@ -353,6 +354,7 @@ content_angle: Before-and-after small apartment organization routine
 price_signal: Needs marketplace validation
 competition_signal: Unknown
 risk_note: Avoid copying article text. Verify marketplace demand and product quality.
+risk_level: Medium
 confidence: Medium
 opportunity_score: 
 next_action: Check marketplace pricing, public reviews, and supplier availability.
@@ -470,6 +472,7 @@ Before using extracted content in a report, confirm:
 - [ ] The AI summary matches the source
 - [ ] Confidence level is included
 - [ ] Risk note is included
+- [ ] Risk level is included
 - [ ] Human reviewer has checked the output
 
 ---
@@ -629,6 +632,7 @@ Public source check
 + Cleaning
 + AI analysis
 + Risk review
++ Risk level classification
 + Source logging
 + Human review
 + Clear disclaimer
