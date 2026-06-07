@@ -1,0 +1,551 @@
+{
+  "name": "TrendPilot AI - Daily Trend Intelligence Pseudo Workflow",
+  "type": "pseudo-workflow",
+  "version": "0.1.0",
+  "status": "planning-template",
+  "description": "A license-safe pseudo workflow for building a daily AI-powered trend intelligence pipeline using public data sources, AI analysis, product opportunity scoring, human review, and report delivery.",
+  "important_notice": [
+    "This is not a real n8n export file.",
+    "This file is a pseudo workflow design created for planning and educational purposes.",
+    "It should not be imported directly into n8n.",
+    "TrendPilot AI does not copy or redistribute third-party workflow exports.",
+    "Users must adapt this workflow to their own tools, APIs, permissions, and compliance requirements."
+  ],
+  "safe_use_principles": [
+    "Use public and legally accessible sources only.",
+    "Do not collect private personal data.",
+    "Do not bypass login walls, paywalls, anti-bot systems, or platform restrictions.",
+    "Do not automate spam, fake engagement, fake reviews, or account farming.",
+    "Do not copy long copyrighted content into reports.",
+    "Do not copy competitor images, creator videos, or protected designs.",
+    "Do not claim guaranteed demand, sales, profit, or business success.",
+    "Add source links, confidence levels, and risk notes.",
+    "Use human review before publishing, selling, or sending reports."
+  ],
+  "recommended_stack": {
+    "scheduler": "n8n or cron",
+    "public_data_collection": "Firecrawl, RSS feeds, public APIs, or manual source lists",
+    "ai_analysis": "Dify, OpenAI-compatible API, local LLM, or other LLM workflow",
+    "data_storage": "Google Sheets, Notion, Airtable, CSV, or database",
+    "report_format": "Markdown, Google Sheets, Notion, Telegram digest, email, or PDF",
+    "delivery": "Telegram, email, Slack, Discord, Notion, or internal dashboard",
+    "human_review": "Manual review step before publishing or monetization"
+  },
+  "workflow_summary": {
+    "goal": "Collect public trend signals, summarize them with AI, score product opportunities, save structured records, and generate a daily trend report.",
+    "input": "Public trend sources and source list records.",
+    "output": "Structured trend records, opportunity scores, risk notes, review status, and a daily report draft.",
+    "recommended_frequency": "Daily",
+    "human_review_required": true
+  },
+  "pseudo_nodes": [
+    {
+      "id": "node_001",
+      "name": "Schedule Trigger",
+      "type": "trigger",
+      "purpose": "Start the daily trend intelligence workflow on a fixed schedule.",
+      "example_configuration": {
+        "frequency": "daily",
+        "time": "09:00",
+        "timezone": "user_defined"
+      },
+      "output": {
+        "run_date": "{{current_date}}",
+        "workflow_run_id": "{{generated_id}}"
+      },
+      "risk_notes": [
+        "Avoid running too frequently.",
+        "Respect source rate limits and platform terms."
+      ]
+    },
+    {
+      "id": "node_002",
+      "name": "Load Public Source List",
+      "type": "data_input",
+      "purpose": "Load a curated list of public data sources to review.",
+      "example_sources": [
+        "official trend report page",
+        "public marketplace category page",
+        "public product page",
+        "public community discussion page",
+        "public review page",
+        "public industry news page",
+        "RSS feed"
+      ],
+      "required_fields": [
+        "source_id",
+        "source_type",
+        "source_name",
+        "source_url",
+        "region",
+        "category",
+        "keyword",
+        "risk_level"
+      ],
+      "risk_notes": [
+        "Only include public sources.",
+        "Do not include login-protected pages.",
+        "Do not include private groups or private profiles.",
+        "Do not include scraped contact databases."
+      ]
+    },
+    {
+      "id": "node_003",
+      "name": "Source Safety Filter",
+      "type": "validation",
+      "purpose": "Filter out sources that are not safe for automated collection.",
+      "checks": [
+        "Is the source public?",
+        "Does the source require login?",
+        "Does the source contain private personal data?",
+        "Does the source require bypassing restrictions?",
+        "Is the source suitable for summarization?",
+        "Is the source risk level acceptable?"
+      ],
+      "routing": {
+        "safe_sources": "node_004",
+        "unsafe_sources": "node_003_rejected_log"
+      },
+      "rejected_log_fields": [
+        "source_id",
+        "source_url",
+        "rejection_reason",
+        "review_status"
+      ],
+      "risk_notes": [
+        "Unsafe sources should be rejected before collection.",
+        "If uncertain, mark as Needs Review instead of collecting automatically."
+      ]
+    },
+    {
+      "id": "node_004",
+      "name": "Collect Public Trend Signals",
+      "type": "public_data_collection",
+      "purpose": "Collect visible public trend signals from approved sources.",
+      "possible_tools": [
+        "Firecrawl",
+        "RSS reader",
+        "public API",
+        "manual source extraction",
+        "search API",
+        "other compliant public data tool"
+      ],
+      "recommended_extracted_fields": [
+        "source_url",
+        "page_title",
+        "source_type",
+        "source_name",
+        "region",
+        "category",
+        "keyword",
+        "visible_product_mentions",
+        "visible_price_signal",
+        "visible_review_signal",
+        "visible_social_signal",
+        "raw_summary",
+        "collection_date"
+      ],
+      "risk_notes": [
+        "Do not copy full pages into reports.",
+        "Do not collect private user profiles.",
+        "Do not bypass anti-bot systems.",
+        "Do not use collected content as a republished dataset."
+      ]
+    },
+    {
+      "id": "node_005",
+      "name": "Clean and Normalize Data",
+      "type": "data_processing",
+      "purpose": "Convert collected public signals into a consistent internal format.",
+      "normalization_steps": [
+        "Remove irrelevant navigation text.",
+        "Remove duplicate records.",
+        "Normalize source type.",
+        "Normalize region.",
+        "Normalize category.",
+        "Shorten raw notes into source-based summaries.",
+        "Keep source URL.",
+        "Add collection date.",
+        "Add risk note if needed."
+      ],
+      "output_schema": {
+        "record_id": "string",
+        "source_type": "string",
+        "source_name": "string",
+        "source_url": "string",
+        "collection_date": "YYYY-MM-DD",
+        "region": "string",
+        "category": "string",
+        "keyword": "string",
+        "raw_signal": "string",
+        "evidence_note": "string",
+        "risk_note": "string"
+      },
+      "risk_notes": [
+        "Summaries should be original.",
+        "Avoid copying long copyrighted text.",
+        "Keep source links for traceability."
+      ]
+    },
+    {
+      "id": "node_006",
+      "name": "AI Trend Analysis",
+      "type": "ai_analysis",
+      "purpose": "Analyze cleaned public signals and extract product or category opportunities.",
+      "recommended_prompt_file": "prompts/trend-analysis-prompt.md",
+      "input_fields": [
+        "source_type",
+        "source_name",
+        "source_url",
+        "region",
+        "category",
+        "keyword",
+        "raw_signal",
+        "evidence_note",
+        "risk_note"
+      ],
+      "output_fields": [
+        "product_idea",
+        "trend_reason",
+        "target_audience",
+        "consumer_pain_point",
+        "buyer_motivation",
+        "emotional_trigger",
+        "suggested_keywords",
+        "content_angle",
+        "marketplace_research_angle",
+        "source_evidence_summary",
+        "uncertainty",
+        "confidence",
+        "suggested_next_action"
+      ],
+      "ai_rules": [
+        "Use only provided source material.",
+        "Do not invent facts.",
+        "Do not claim guaranteed demand.",
+        "Do not include private personal data.",
+        "Do not copy long source text.",
+        "Add uncertainty when evidence is weak."
+      ]
+    },
+    {
+      "id": "node_007",
+      "name": "Product Opportunity Scoring",
+      "type": "ai_scoring",
+      "purpose": "Score each product idea using the TrendPilot AI 1-5 scoring model.",
+      "recommended_prompt_file": "prompts/product-scoring-prompt.md",
+      "scoring_dimensions": {
+        "positive_factors": [
+          "Demand Signal",
+          "Social Visibility",
+          "Price Potential",
+          "Supplier Availability",
+          "Differentiation Potential"
+        ],
+        "negative_factors": [
+          "Competition Level",
+          "Shipping Difficulty",
+          "Compliance Risk"
+        ]
+      },
+      "formula": "Opportunity Score = Demand Signal + Social Visibility + Price Potential + Supplier Availability + Differentiation Potential - Competition Level - Shipping Difficulty - Compliance Risk",
+      "output_fields": [
+        "demand_signal_score",
+        "social_visibility_score",
+        "price_potential_score",
+        "supplier_availability_score",
+        "differentiation_potential_score",
+        "competition_level_score",
+        "shipping_difficulty_score",
+        "compliance_risk_score",
+        "final_opportunity_score",
+        "score_interpretation",
+        "confidence",
+        "main_strengths",
+        "main_risks",
+        "validation_steps"
+      ],
+      "risk_notes": [
+        "A high score does not guarantee sales.",
+        "Scores are research signals only.",
+        "Human review is recommended before action."
+      ]
+    },
+    {
+      "id": "node_008",
+      "name": "Risk Check",
+      "type": "ai_risk_review",
+      "purpose": "Review product ideas and report content for compliance, claim, platform, IP, privacy, and shipping risks.",
+      "recommended_prompt_file": "prompts/risk-check-prompt.md",
+      "risk_categories": [
+        "Product safety risk",
+        "Compliance or certification risk",
+        "Platform policy risk",
+        "Health or wellness claim risk",
+        "Baby or child safety risk",
+        "Electronics or battery risk",
+        "Food, supplement, or ingredient risk",
+        "Trademark, copyright, design, or IP risk",
+        "Shipping, customs, or fulfillment risk",
+        "Privacy or personal data risk",
+        "Spam or platform abuse risk",
+        "Unsupported claim risk",
+        "Misleading income or guaranteed result risk",
+        "Source quality risk"
+      ],
+      "output_fields": [
+        "overall_risk_level",
+        "risk_summary",
+        "risk_checklist",
+        "claims_to_remove_or_rewrite",
+        "safer_wording_suggestions",
+        "human_review_requirements",
+        "recommended_decision"
+      ],
+      "routing": {
+        "low_risk": "node_009",
+        "medium_risk": "node_009",
+        "high_risk": "node_008_needs_review_log",
+        "avoid": "node_008_rejected_log"
+      }
+    },
+    {
+      "id": "node_009",
+      "name": "Create Structured Trend Record",
+      "type": "data_mapping",
+      "purpose": "Merge source data, AI trend analysis, scoring, and risk review into one structured record.",
+      "output_schema": {
+        "record_id": "string",
+        "source_type": "string",
+        "source_name": "string",
+        "source_url": "string",
+        "collection_date": "YYYY-MM-DD",
+        "region": "string",
+        "category": "string",
+        "keyword": "string",
+        "product_name": "string",
+        "trend_signal": "string",
+        "evidence_summary": "string",
+        "target_audience": "string",
+        "pain_point": "string",
+        "content_angle": "string",
+        "price_signal": "string",
+        "competition_signal": "string",
+        "risk_note": "string",
+        "confidence": "Low | Medium | High",
+        "opportunity_score": "number",
+        "next_action": "string",
+        "review_status": "Draft | Needs Review | Approved | Rejected | Watchlist",
+        "reviewer_note": "string"
+      },
+      "default_review_status": "Draft"
+    },
+    {
+      "id": "node_010",
+      "name": "Save to Research Log",
+      "type": "storage",
+      "purpose": "Save structured trend records to a reviewable storage location.",
+      "possible_tools": [
+        "Google Sheets",
+        "Notion",
+        "Airtable",
+        "CSV file",
+        "database"
+      ],
+      "recommended_template": "templates/source-log-template.csv",
+      "risk_notes": [
+        "Do not store private personal data.",
+        "Do not store API keys in public sheets.",
+        "Manage access permissions carefully."
+      ]
+    },
+    {
+      "id": "node_011",
+      "name": "Generate Daily Report Draft",
+      "type": "report_generation",
+      "purpose": "Create a daily trend intelligence report using approved or draft records.",
+      "recommended_template": "templates/daily-trend-report.md",
+      "report_sections": [
+        "Executive Summary",
+        "Sources Reviewed",
+        "Top Product Opportunities",
+        "Watchlist",
+        "High-Risk Ideas",
+        "Consumer Language",
+        "Content Ideas",
+        "Keyword Ideas",
+        "Competitor Snapshot",
+        "Review Insight Summary",
+        "Risk and Compliance Notes",
+        "Recommended Next Actions",
+        "Human Review Checklist",
+        "Report Disclaimer"
+      ],
+      "output_formats": [
+        "Markdown",
+        "Google Docs",
+        "Notion",
+        "PDF",
+        "Email draft"
+      ],
+      "risk_notes": [
+        "Report should remain Draft until human reviewed.",
+        "Do not publish unsupported claims.",
+        "Do not remove disclaimers."
+      ]
+    },
+    {
+      "id": "node_012",
+      "name": "Human Review Gate",
+      "type": "manual_review",
+      "purpose": "Require human review before publishing, selling, or sending the report.",
+      "review_checklist": [
+        "Sources are public.",
+        "Source links are included.",
+        "Claims are supported by evidence.",
+        "No private personal data is included.",
+        "No long copyrighted text is copied.",
+        "No platform restriction bypass is involved.",
+        "No product success is guaranteed.",
+        "Confidence levels are included.",
+        "Risk notes are included.",
+        "High-risk ideas are clearly marked.",
+        "Human reviewer has checked the final report."
+      ],
+      "routing": {
+        "approved": "node_013",
+        "needs_revision": "node_011",
+        "rejected": "node_012_rejected_archive"
+      }
+    },
+    {
+      "id": "node_013",
+      "name": "Generate Telegram Digest",
+      "type": "message_formatting",
+      "purpose": "Create a short digest from approved trend records.",
+      "recommended_template": "templates/telegram-digest-template.md",
+      "input_filter": {
+        "review_status": "Approved",
+        "minimum_confidence": "Medium",
+        "exclude_risk_level": "Avoid"
+      },
+      "output_fields": [
+        "date",
+        "region",
+        "category",
+        "top_opportunities",
+        "watchlist",
+        "high_risk_ideas",
+        "recommended_next_steps",
+        "disclaimer"
+      ],
+      "risk_notes": [
+        "Only send to opt-in channels or internal teams.",
+        "Do not use for spam.",
+        "Keep disclaimer included."
+      ]
+    },
+    {
+      "id": "node_014",
+      "name": "Deliver Report",
+      "type": "delivery",
+      "purpose": "Send the reviewed report or digest through approved delivery channels.",
+      "possible_channels": [
+        "Telegram",
+        "Email",
+        "Slack",
+        "Discord",
+        "Notion",
+        "Google Drive",
+        "Internal dashboard"
+      ],
+      "safe_delivery_rules": [
+        "Send only to opt-in users, internal teams, or approved subscribers.",
+        "Do not send unsolicited mass messages.",
+        "Do not use scraped contact lists.",
+        "Include disclaimer.",
+        "Keep source links available."
+      ]
+    },
+    {
+      "id": "node_015",
+      "name": "Archive Report and Records",
+      "type": "archive",
+      "purpose": "Archive the report, source records, and review status for future reference.",
+      "archive_fields": [
+        "workflow_run_id",
+        "report_date",
+        "region",
+        "category",
+        "record_count",
+        "approved_count",
+        "watchlist_count",
+        "rejected_count",
+        "report_url",
+        "reviewer",
+        "review_notes"
+      ],
+      "possible_tools": [
+        "Notion",
+        "Google Drive",
+        "GitHub private repository",
+        "Airtable",
+        "database",
+        "local folder"
+      ],
+      "risk_notes": [
+        "Do not archive private personal data.",
+        "Do not publish private internal notes accidentally.",
+        "Check sharing permissions."
+      ]
+    }
+  ],
+  "recommended_data_record": {
+    "record_id": "TRD-001",
+    "source_type": "Social",
+    "source_name": "Example Public Platform",
+    "source_url": "https://example.com/public-trend-page",
+    "collection_date": "2026-06-07",
+    "publication_date": "",
+    "region": "United States",
+    "category": "Travel Accessories",
+    "keyword": "jewelry travel organizer",
+    "product_name": "Jewelry Travel Organizer",
+    "trend_signal": "Public travel packing content shows repeated interest in compact jewelry storage.",
+    "evidence_summary": "Visible public content suggests users want a cleaner way to store rings, earrings, and necklaces during travel.",
+    "target_audience": "Women travelers; jewelry owners; gift buyers",
+    "pain_point": "Jewelry can get tangled, scratched, or lost during travel.",
+    "content_angle": "Before-and-after packing routine showing messy jewelry versus organized travel case.",
+    "price_signal": "$8-$35 visible public range",
+    "competition_signal": "Medium",
+    "risk_note": "Avoid copying creator content or competitor images. Verify material claims and zipper quality.",
+    "confidence": "Medium",
+    "opportunity_score": 15,
+    "next_action": "Check marketplace pricing, review complaints, and supplier customization options.",
+    "review_status": "Draft",
+    "reviewer_note": ""
+  },
+  "human_review_required_before": [
+    "Sending a report to subscribers",
+    "Publishing a paid report",
+    "Making sourcing decisions",
+    "Contacting suppliers",
+    "Publishing public claims",
+    "Using rankings in marketing",
+    "Selling templates based on the workflow"
+  ],
+  "what_this_workflow_should_not_do": [
+    "Scrape private personal data",
+    "Build contact databases",
+    "Send automated spam",
+    "Generate fake reviews",
+    "Generate fake engagement",
+    "Farm accounts",
+    "Bypass platform restrictions",
+    "Copy copyrighted content",
+    "Guarantee income",
+    "Make investment decisions",
+    "Promote unsafe regulated products without review"
+  ],
+  "disclaimer": "This pseudo workflow is based on public data research concepts and AI-assisted analysis. It is for educational and planning purposes only. It does not guarantee product demand, sales, profit, or business success. Users should verify all sources, review platform rules, check compliance requirements, and conduct their own due diligence before making business decisions."
+}
