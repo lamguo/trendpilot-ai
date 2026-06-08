@@ -715,3 +715,16 @@ If TrendPilot AI helps you save time or gives you value, you can support the pro
 - 💰 Support via PayPal: https://www.paypal.me/lamguo
 
 Thank you for supporting open-source development.
+
+
+---
+
+### 📎 See also
+
+| Project | |
+|---------|-|
+| [**recallgate**](https://github.com/lamguo/recallgate) | Token-efficient memory gate for AI coding agents |
+| [**markitdown-plus**](https://github.com/lamguo/markitdown-plus) | Batch document conversion toolkit |
+| [**trendpilot-ai**](https://github.com/lamguo/trendpilot-ai) | Curated AI tools, workflows, and templates |
+
+*Built from real use, for real use.*
